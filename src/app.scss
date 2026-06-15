@@ -1,0 +1,87 @@
+page {
+  background: linear-gradient(135deg, #fff5f0 0%, #fde4ea 35%, #f4e0f5 70%, #e8e0f7 100%);
+  color: #3d2a35;
+  font-family: "Noto Serif SC", "Songti SC", "Source Han Serif SC", -apple-system, BlinkMacSystemFont, "PingFang SC",
+    serif;
+}
+
+.page-shell {
+  min-height: 100vh;
+  padding: 32rpx 20rpx 48rpx;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at top right, rgba(255, 181, 167, 0.15), transparent 30%),
+    radial-gradient(circle at bottom left, rgba(200, 182, 226, 0.16), transparent 32%),
+    linear-gradient(135deg, #fff5f0 0%, #fde4ea 35%, #f4e0f5 70%, #e8e0f7 100%);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.76);
+  border: 1rpx solid rgba(255, 255, 255, 0.64);
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 40rpx rgba(155, 127, 199, 0.12);
+  backdrop-filter: blur(20rpx);
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 900;
+  color: #3d2a35;
+}
+
+.section-subtitle {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #6b4f60;
+}
+
+.button-primary {
+  height: 92rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff8b7a 0%, #9b7fc7 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 28rpx rgba(155, 127, 199, 0.24);
+}
+
+.button-secondary {
+  height: 84rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1.5rpx solid rgba(255, 181, 167, 0.3);
+  color: #3d2a35;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill-tabs {
+  display: flex;
+  gap: 12rpx;
+}
+
+.pill-tab {
+  flex: 1;
+  height: 84rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1.5rpx solid rgba(255, 181, 167, 0.22);
+  color: #6b4f60;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill-tab.active {
+  background: linear-gradient(135deg, #ffb5a7 0%, #c8b6e2 100%);
+  color: #fff;
+  border-color: transparent;
+}

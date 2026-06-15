@@ -1,0 +1,65 @@
+name: Build Miniapp Packages
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'project.config.json'
+      - 'project.tt.json'
+      - 'Dockerfile'
+      - '.github/workflows/build-miniapp.yml'
+  workflow_dispatch:
+
+jobs:
+  build-weapp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build WeChat miniapp
+        run: npm run build:weapp
+
+      - name: Upload WeChat artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: miniapp-weapp-dist
+          path: dist
+
+  build-douyin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Douyin miniapp
+        run: npm run build:tt
+
+      - name: Upload Douyin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: miniapp-douyin-dist
+          path: dist

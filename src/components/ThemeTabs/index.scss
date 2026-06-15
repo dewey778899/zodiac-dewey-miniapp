@@ -1,0 +1,21 @@
+.theme-tabs {
+  margin-top: 24rpx;
+}
+
+.theme-tab {
+  flex-direction: column;
+  gap: 6rpx;
+  height: 96rpx;
+  border-radius: 26rpx;
+  box-shadow: none;
+}
+
+.theme-tab-icon {
+  font-size: 28rpx;
+  line-height: 1;
+}
+
+.theme-tab-text {
+  font-size: 24rpx;
+  font-weight: 700;
+}

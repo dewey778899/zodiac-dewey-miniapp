@@ -1,0 +1,223 @@
+.home-hero {
+  padding: 34rpx 28rpx;
+  background:
+    radial-gradient(circle at top right, rgba(255, 181, 167, 0.24), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 244, 248, 0.94) 52%, rgba(247, 236, 252, 0.94) 100%);
+  border: 1rpx solid rgba(255, 181, 167, 0.24);
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 181, 167, 0.18);
+  border: 1.5rpx solid rgba(255, 139, 122, 0.24);
+  color: #ff8b7a;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.model-switch-inline {
+  margin-top: 24rpx;
+}
+
+.home-form-error {
+  margin-top: 20rpx;
+  padding: 20rpx 22rpx;
+  border-radius: 22rpx;
+  background: rgba(255, 95, 109, 0.12);
+  border: 1rpx solid rgba(255, 117, 135, 0.2);
+  color: #c44d63;
+  font-size: 24rpx;
+}
+
+.mini-loading-card {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  background:
+    radial-gradient(circle at right top, rgba(255, 181, 167, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 249, 252, 0.9));
+  border: 1rpx solid rgba(255, 181, 167, 0.18);
+}
+
+.mini-loading-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.mini-loading-label {
+  font-size: 24rpx;
+  color: #6b4f60;
+}
+
+.mini-loading-value {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #7d5fb3;
+}
+
+.mini-loading-track {
+  margin-top: 14rpx;
+  height: 14rpx;
+  border-radius: 999rpx;
+  overflow: hidden;
+  background: rgba(155, 127, 199, 0.16);
+}
+
+.mini-loading-fill {
+  height: 100%;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #ff8b7a 0%, #ffb58a 45%, #9b7fc7 100%);
+  transition: width 0.25s ease;
+}
+
+.home-actions {
+  margin-top: 28rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.home-actions-inline {
+  margin-top: 16rpx;
+}
+
+.home-tip {
+  margin-top: 18rpx;
+  font-size: 22rpx;
+  line-height: 1.7;
+  color: #7e6574;
+}
+
+.premium-modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 42, 53, 0.42);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24rpx;
+  box-sizing: border-box;
+  z-index: 60;
+}
+
+.premium-modal-card {
+  width: 100%;
+  border-radius: 32rpx;
+  background:
+    radial-gradient(circle at top right, rgba(255, 181, 167, 0.24), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 245, 240, 0.96) 52%, rgba(248, 236, 246, 0.96) 100%);
+  padding: 30rpx 28rpx 28rpx;
+  box-sizing: border-box;
+  box-shadow: 0 24rpx 72rpx rgba(155, 127, 199, 0.18);
+  border: 1rpx solid rgba(255, 181, 167, 0.2);
+}
+
+.premium-modal-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 138rpx;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 198, 92, 0.12);
+  border: 1.5rpx solid rgba(255, 198, 92, 0.22);
+  color: #ffd57c;
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.premium-modal-title {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #3d2a35;
+}
+
+.premium-modal-copy {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #6b4f60;
+}
+
+.premium-entry-group {
+  margin-top: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.premium-entry-card {
+  border-radius: 26rpx;
+  padding: 24rpx;
+  background:
+    radial-gradient(circle at top right, rgba(7, 193, 96, 0.1), transparent 32%),
+    rgba(255, 255, 255, 0.82);
+  border: 1.5rpx solid rgba(7, 193, 96, 0.18);
+  box-shadow: 0 14rpx 30rpx rgba(155, 127, 199, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-entry-card::before {
+  content: "微信支付";
+  position: absolute;
+  top: 18rpx;
+  right: 18rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(7, 193, 96, 0.12);
+  color: #56e29d;
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+
+.premium-entry-card:active {
+  transform: translateY(2rpx);
+}
+
+.premium-entry-title {
+  display: block;
+  padding-right: 132rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3d2a35;
+}
+
+.premium-entry-subtitle {
+  display: block;
+  margin-top: 10rpx;
+  padding-right: 16rpx;
+  font-size: 22rpx;
+  line-height: 1.7;
+  color: #6b4f60;
+}
+
+.premium-modal-actions {
+  margin-top: 24rpx;
+}
+
+.premium-modal-btn {
+  width: 100%;
+  border-radius: 999rpx;
+  border: none;
+  font-size: 28rpx;
+}
+
+.premium-modal-btn::after {
+  border: none;
+}
+
+.premium-modal-btn.ghost {
+  background: rgba(255, 255, 255, 0.66);
+  color: #6b4f60;
+}

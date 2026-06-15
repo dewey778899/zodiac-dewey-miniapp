@@ -1,0 +1,9 @@
+{
+  "miniprogramRoot": "dist",
+  "projectname": "zodiac-dewey-miniapp",
+  "appid": "touristappid",
+  "setting": {
+    "es6": true,
+    "minified": false
+  }
+}

@@ -1,0 +1,50 @@
+.model-switch {
+  display: flex;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.model-chip {
+  flex: 1;
+  padding: 22rpx 24rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1.5rpx solid rgba(255, 181, 167, 0.24);
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.model-chip.active {
+  background: linear-gradient(135deg, #ffb5a7 0%, #c8b6e2 100%);
+  border-color: transparent;
+  box-shadow: 0 10rpx 24rpx rgba(155, 127, 199, 0.18);
+}
+
+.model-chip.premium {
+  position: relative;
+  overflow: hidden;
+}
+
+.model-chip.premium::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(201, 163, 107, 0.16), transparent 38%);
+  pointer-events: none;
+}
+
+.model-chip.premium.active {
+  background: linear-gradient(135deg, #ffb5a7 0%, #c8b6e2 55%, #f4dcb2 100%);
+}
+
+.model-chip-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3d2a35;
+}
+
+.model-chip-badge {
+  font-size: 22rpx;
+  color: #6b4f60;
+}

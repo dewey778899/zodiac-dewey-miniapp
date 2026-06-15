@@ -1,0 +1,83 @@
+.wallet-card {
+  padding: 32rpx 26rpx;
+  background:
+    radial-gradient(circle at top right, rgba(200, 182, 226, 0.16), transparent 28%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 244, 248, 0.94) 100%);
+  border: 1rpx solid rgba(255, 181, 167, 0.18);
+}
+
+.wallet-field {
+  margin-top: 20rpx;
+}
+
+.wallet-label {
+  display: block;
+  margin-bottom: 10rpx;
+  font-size: 24rpx;
+  color: #6b4f60;
+}
+
+.wallet-input {
+  min-height: 88rpx;
+  padding: 0 24rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1.5rpx solid rgba(255, 181, 167, 0.26);
+  box-sizing: border-box;
+  color: #3d2a35;
+  font-size: 28rpx;
+}
+
+.wallet-actions {
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.wallet-summary {
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1.5rpx solid rgba(255, 181, 167, 0.18);
+}
+
+.wallet-line {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #4e3a47;
+}
+
+.wallet-section {
+  margin-top: 26rpx;
+}
+
+.wallet-section-title {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #3d2a35;
+}
+
+.wallet-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.72);
+  color: #6b4f60;
+  font-size: 24rpx;
+  border: 1rpx solid rgba(255, 181, 167, 0.14);
+}
+
+.wallet-empty {
+  display: block;
+  margin-top: 10rpx;
+  color: #9a7a8d;
+  font-size: 24rpx;
+}

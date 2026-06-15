@@ -1,0 +1,44 @@
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+  margin-top: 24rpx;
+}
+
+.chapter-card {
+  padding: 26rpx 24rpx;
+}
+
+.chapter-head {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  margin-bottom: 14rpx;
+}
+
+.chapter-index {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 18rpx;
+  background: rgba(89, 213, 255, 0.1);
+  color: #59d5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+.chapter-title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #edf6ff;
+}
+
+.chapter-content {
+  font-size: 26rpx;
+  line-height: 1.9;
+  color: #c9dbef;
+  white-space: pre-wrap;
+}

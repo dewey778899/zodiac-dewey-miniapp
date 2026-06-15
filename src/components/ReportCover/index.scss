@@ -1,0 +1,129 @@
+.report-cover {
+  padding: 34rpx 28rpx;
+  background:
+    radial-gradient(circle at top right, rgba(89, 213, 255, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(10, 21, 38, 0.9), rgba(7, 17, 29, 0.92));
+}
+
+.report-cover-kicker {
+  font-size: 20rpx;
+  letter-spacing: 4rpx;
+  color: #59d5ff;
+}
+
+.report-cover-title {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 42rpx;
+  font-weight: 800;
+  color: #edf6ff;
+}
+
+.report-cover-score-row {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.report-cover-score {
+  font-family: SimSun, STSong, "Noto Serif SC", serif;
+  font-size: 110rpx;
+  line-height: 1;
+  color: #edf6ff;
+}
+
+.report-cover-score-unit {
+  font-size: 28rpx;
+  color: #88a6c7;
+  padding-bottom: 16rpx;
+}
+
+.report-cover-type,
+.report-cover-tagline {
+  display: block;
+  text-align: center;
+}
+
+.report-cover-type {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  color: #cfe3f9;
+}
+
+.report-cover-tagline {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #8ea7c6;
+}
+
+.report-cover-people {
+  margin-top: 26rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+}
+
+.report-cover-people.single {
+  justify-content: center;
+}
+
+.report-cover-person {
+  min-width: 180rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.report-cover-symbol {
+  font-size: 56rpx;
+  color: #59d5ff;
+}
+
+.report-cover-zodiac {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #8ea7c6;
+}
+
+.report-cover-name {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #edf6ff;
+}
+
+.report-cover-heart {
+  font-size: 36rpx;
+  color: #8db7ff;
+}
+
+.report-cover-meta {
+  margin-top: 28rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx solid rgba(89, 213, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  text-align: center;
+}
+
+.report-cover-meta-label {
+  font-size: 20rpx;
+  letter-spacing: 3rpx;
+  color: #88a6c7;
+}
+
+.report-cover-meta-value {
+  font-size: 24rpx;
+  color: #edf6ff;
+}
+
+.report-cover-meta-date {
+  font-size: 22rpx;
+  color: #8ea7c6;
+}
