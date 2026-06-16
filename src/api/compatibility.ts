@@ -37,6 +37,13 @@ export function bindReferralUser(data: Record<string, unknown>) {
   });
 }
 
+export function bindReferralUserByWechatPhone(data: Record<string, unknown>) {
+  return request<ReferralProfile>("/api/referral/bind/wechat-phone", {
+    method: "POST",
+    data
+  });
+}
+
 export function recordReferralVisit(data: Record<string, unknown>) {
   return request<Record<string, unknown>>("/api/referral/visit", {
     method: "POST",

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Taro from "@tarojs/taro";
 import { Text, View } from "@tarojs/components";
 import { generateCompatibility } from "../../api/compatibility";
+import { LunarConverter } from "../../components/LunarConverter";
 import { ModelSwitch } from "../../components/ModelSwitch";
 import { PersonForm } from "../../components/PersonForm";
 import { ThemeTabs } from "../../components/ThemeTabs";
@@ -12,12 +13,12 @@ import { buildPersonPayload, buildSharePath, validateThemeForm } from "../../uti
 import "./index.scss";
 
 const progressStages = [
-  { min: 0, label: "准备开始" },
-  { min: 8, label: "正在校对出生信息" },
-  { min: 28, label: "正在计算星盘位置" },
-  { min: 52, label: "正在分析关系结构" },
-  { min: 76, label: "正在整理结果细节" },
-  { min: 96, label: "即将完成" }
+  { min: 0, label: "\u51c6\u5907\u5f00\u59cb" },
+  { min: 8, label: "\u6b63\u5728\u6821\u5bf9\u51fa\u751f\u4fe1\u606f" },
+  { min: 28, label: "\u6b63\u5728\u8ba1\u7b97\u661f\u76d8\u4f4d\u7f6e" },
+  { min: 52, label: "\u6b63\u5728\u5206\u6790\u5173\u7cfb\u7ed3\u6784" },
+  { min: 76, label: "\u6b63\u5728\u6574\u7406\u7ed3\u679c\u7ec6\u8282" },
+  { min: 96, label: "\u5373\u5c06\u5b8c\u6210" }
 ];
 
 export default function HomePage() {
@@ -37,8 +38,9 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [progressLabel, setProgressLabel] = useState("准备开始");
+  const [progressLabel, setProgressLabel] = useState("\u51c6\u5907\u5f00\u59cb");
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showLunarConverter, setShowLunarConverter] = useState(false);
 
   const currentTheme = useMemo(
     () => REPORT_THEMES.find((item) => item.key === activeTheme) ?? REPORT_THEMES[0],
@@ -51,9 +53,7 @@ export default function HomePage() {
 
   useEffect(() => {
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
@@ -74,7 +74,7 @@ export default function HomePage() {
   const startProgress = () => {
     stopProgress();
     setProgress(3);
-    setProgressLabel("准备开始");
+    setProgressLabel("\u51c6\u5907\u5f00\u59cb");
 
     const tick = (value: number) => {
       const cap = 96;
@@ -93,12 +93,12 @@ export default function HomePage() {
 
   const finishProgress = async () => {
     stopProgress();
-    setProgressLabel("正在完成报告");
+    setProgressLabel("\u6b63\u5728\u5b8c\u6210\u62a5\u544a");
     for (const value of [98, 100]) {
       setProgress(value);
       await new Promise((resolve) => setTimeout(resolve, 120));
     }
-    setProgressLabel("已完成");
+    setProgressLabel("\u5df2\u5b8c\u6210");
   };
 
   const handleThemeChange = (theme: ThemeType) => {
@@ -149,18 +149,18 @@ export default function HomePage() {
     } catch (submitError) {
       stopProgress();
       setProgress(0);
-      setProgressLabel("准备开始");
-      setError(submitError instanceof Error ? submitError.message : "生成报告失败，请稍后再试");
+      setProgressLabel("\u51c6\u5907\u5f00\u59cb");
+      setError(submitError instanceof Error ? submitError.message : "\u751f\u6210\u62a5\u544a\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5");
     } finally {
       setSubmitting(false);
     }
   };
 
   const renderActionLabel = () => {
-    if (submitting) return "正在生成报告...";
-    if (activeModel === "claude") return "生成深度报告";
-    if (activeTheme === "love") return "生成爱情报告";
-    return `生成${currentTheme.label}报告`;
+    if (submitting) return "\u6b63\u5728\u751f\u6210\u62a5\u544a...";
+    if (activeModel === "claude") return "\u751f\u6210\u6df1\u5ea6\u62a5\u544a";
+    if (activeTheme === "love") return "\u751f\u6210\u7231\u60c5\u62a5\u544a";
+    return `\u751f\u6210${currentTheme.label}\u62a5\u544a`;
   };
 
   const updateCurrentPerson = (side: "a" | "b", patch: Partial<PersonFormState>) => {
@@ -174,7 +174,7 @@ export default function HomePage() {
         <Text className="hero-tag">
           {activeTheme === "love" ? "LOVE REPORT" : activeTheme === "career" ? "CAREER READING" : "WEALTH READING"}
         </Text>
-        <Text className="section-title">小登哥星盘</Text>
+        <Text className="section-title">{"\u5c0f\u767b\u54e5\u661f\u76d8"}</Text>
         <Text className="section-subtitle">{currentTheme.subtitle}</Text>
       </View>
 
@@ -196,16 +196,21 @@ export default function HomePage() {
       </View>
 
       <View className="home-actions home-actions-inline">
+        <View className="button-secondary" onClick={() => setShowLunarConverter(true)}>
+          {"\u516c\u5386\u519c\u5386\u4e92\u8f6c"}
+        </View>
         <View className="button-secondary" onClick={() => Taro.navigateTo({ url: "/pages/wallet/index" })}>
-          邀请返现
+          {"\u8fd4\u73b0\u8d26\u6237"}
         </View>
       </View>
 
-      <View className="home-tip">好友通过你的分享进入并完成深度解析付费后，返现会自动进入你的统一账户。</View>
+      <View className="home-tip">
+        {"\u597d\u53cb\u901a\u8fc7\u4f60\u7684\u5206\u4eab\u8fdb\u5165\u5e76\u5b8c\u6210\u6df1\u5ea6\u89e3\u6790\u4ed8\u8d39\u540e\uff0c\u8fd4\u73b0\u4f1a\u81ea\u52a8\u8fdb\u5165\u4f60\u7684\u7edf\u4e00\u8d26\u6237\u3002"}
+      </View>
 
-      <PersonForm title="我的信息" value={personA} onChange={(patch) => updateCurrentPerson("a", patch)} />
+      <PersonForm title="\u6211\u7684\u4fe1\u606f" value={personA} onChange={(patch) => updateCurrentPerson("a", patch)} />
       {activeTheme === "love" ? (
-        <PersonForm title="TA 的信息" value={personB} onChange={(patch) => updateCurrentPerson("b", patch)} />
+        <PersonForm title="TA \u7684\u4fe1\u606f" value={personB} onChange={(patch) => updateCurrentPerson("b", patch)} />
       ) : null}
 
       {submitting ? (
@@ -232,26 +237,28 @@ export default function HomePage() {
         <View className="premium-modal-mask" onClick={() => setShowPremiumModal(false)}>
           <View className="premium-modal-card" onClick={(event) => event.stopPropagation()}>
             <Text className="premium-modal-tag">PREMIUM</Text>
-            <Text className="premium-modal-title">深度解析</Text>
+            <Text className="premium-modal-title">{"\u6df1\u5ea6\u89e3\u6790"}</Text>
             <Text className="premium-modal-copy">
-              支付 29.9 元后解锁当前主题一次深度解析。支付成功后回到表单页，再手动点击生成深度报告。
+              {"\u652f\u4ed8 29.9 \u5143\u540e\u89e3\u9501\u5f53\u524d\u4e3b\u9898\u4e00\u6b21\u6df1\u5ea6\u89e3\u6790\u3002\u652f\u4ed8\u6210\u529f\u540e\u56de\u5230\u8868\u5355\u9875\uff0c\u518d\u624b\u52a8\u70b9\u51fb\u751f\u6210\u6df1\u5ea6\u62a5\u544a\u3002"}
             </Text>
             <View className="premium-entry-group">
               <View className="premium-entry-card" onClick={() => Taro.navigateTo({ url: `/pages/payment/index?theme=${activeTheme}` })}>
-                <Text className="premium-entry-title">微信支付 29.9 元</Text>
+                <Text className="premium-entry-title">{"\u5fae\u4fe1\u652f\u4ed8 29.9 \u5143"}</Text>
                 <Text className="premium-entry-subtitle">
-                  进入支付页后先绑定手机号，再发起微信支付。支付成功后，当前主题会立刻解锁一次深度解析。
+                  {"\u8fdb\u5165\u652f\u4ed8\u9875\u540e\u5148\u7ed1\u5b9a\u624b\u673a\u53f7\uff0c\u518d\u53d1\u8d77\u5fae\u4fe1\u652f\u4ed8\u3002\u652f\u4ed8\u6210\u529f\u540e\uff0c\u5f53\u524d\u4e3b\u9898\u4f1a\u7acb\u5373\u89e3\u9501\u4e00\u6b21\u6df1\u5ea6\u89e3\u6790\u3002"}
                 </Text>
               </View>
             </View>
             <View className="premium-modal-actions">
               <View className="button-secondary premium-modal-btn ghost" onClick={() => setShowPremiumModal(false)}>
-                关闭
+                {"\u5173\u95ed"}
               </View>
             </View>
           </View>
         </View>
       ) : null}
+
+      <LunarConverter visible={showLunarConverter} onClose={() => setShowLunarConverter(false)} />
     </View>
   );
 }

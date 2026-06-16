@@ -19,7 +19,9 @@ export function ModelSwitch({ activeModel, premiumUnlocked, onChange }: Props) {
           onClick={() => onChange(model)}
         >
           <Text className="model-chip-label">{MODEL_COPY[model].label}</Text>
-          <Text className="model-chip-badge">{model === "claude" && premiumUnlocked ? "已解锁" : MODEL_COPY[model].badge}</Text>
+          <Text className="model-chip-badge">
+            {model === "claude" && premiumUnlocked ? "\u5df2\u89e3\u9501" : MODEL_COPY[model].badge}
+          </Text>
         </View>
       ))}
     </View>

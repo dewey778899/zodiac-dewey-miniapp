@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import Taro, { useRouter } from "@tarojs/taro";
-import { Input, Text, View } from "@tarojs/components";
-import { bindReferralUser, fetchOrder, prepareWechatJsapi } from "../../api/compatibility";
+import { Button, Text, View } from "@tarojs/components";
+import { bindReferralUserByWechatPhone, fetchOrder, prepareWechatJsapi } from "../../api/compatibility";
 import { useReportStore } from "../../store/useReportStore";
 import type { PaymentOrderResponse, ThemeType } from "../../types/report";
+import { detectPlatform, ensureDeviceToken, getPendingInviteCode, setPendingInviteCode, setSessionOpenid } from "../../utils/auth";
 import "./index.scss";
 
 type WechatPayPayload = {
@@ -15,27 +16,27 @@ type WechatPayPayload = {
   paySign?: string;
 };
 
-function ensureDeviceToken() {
-  const key = "zodiac_device_token";
-  const existing = Taro.getStorageSync<string>(key);
-  if (existing) return existing;
-  const token = `mini-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
-  Taro.setStorageSync(key, token);
-  return token;
-}
-
 function getThemeLabel(theme: ThemeType) {
-  if (theme === "career") return "事业";
-  if (theme === "wealth") return "财运";
-  return "爱情";
+  if (theme === "career") return "\u4e8b\u4e1a";
+  if (theme === "wealth") return "\u8d22\u8fd0";
+  return "\u7231\u60c5";
 }
 
 export default function PaymentPage() {
   const router = useRouter();
   const theme = ((router.params.theme as ThemeType) || "love") as ThemeType;
-  const { referralProfile, pendingInviteCode, setReferralProfile, setAccessToken, setThemeModel } = useReportStore();
-  const [phone, setPhone] = useState(referralProfile?.phone || "");
-  const [status, setStatus] = useState("支付前先绑定手机号。好友通过你的邀请码付费后，你会获得返现。");
+  const {
+    referralProfile,
+    pendingInviteCode,
+    setReferralProfile,
+    setAccessToken,
+    setThemeModel,
+    setPendingInviteCode: setStorePendingInviteCode,
+    setSessionOpenid: setStoreSessionOpenid
+  } = useReportStore();
+  const [status, setStatus] = useState(
+    "\u652f\u4ed8\u524d\u5148\u5b8c\u6210\u5fae\u4fe1\u624b\u673a\u53f7\u6388\u6743\u3002\u6388\u6743\u540e\u7cfb\u7edf\u4f1a\u81ea\u52a8\u5efa\u7acb\u8d26\u6237\u3001\u8bb0\u5f55\u8ba2\u5355\uff0c\u5e76\u5728\u652f\u4ed8\u6210\u529f\u540e\u81ea\u52a8\u89e3\u9501\u3002"
+  );
   const [latestOutTradeNo, setLatestOutTradeNo] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +53,7 @@ export default function PaymentPage() {
 
   const requestWechatPay = async (payload: WechatPayPayload) => {
     if (!payload.timeStamp || !payload.nonceStr || !payload.package || !payload.paySign) {
-      throw new Error("支付参数不完整，暂时无法拉起微信支付");
+      throw new Error("\u652f\u4ed8\u53c2\u6570\u4e0d\u5b8c\u6574\uff0c\u6682\u65f6\u65e0\u6cd5\u62c9\u8d77\u5fae\u4fe1\u652f\u4ed8");
     }
     await Taro.requestPayment({
       timeStamp: payload.timeStamp,
@@ -63,32 +64,50 @@ export default function PaymentPage() {
     });
   };
 
-  const ensureBoundPhone = async () => {
-    if (!phone.trim()) {
-      throw new Error("请先填写手机号");
+  const bindByWechatPhone = async (event?: { detail?: { code?: string } }) => {
+    const phoneCode = event?.detail?.code;
+    if (!phoneCode) {
+      throw new Error("\u4f60\u53d6\u6d88\u4e86\u624b\u673a\u53f7\u6388\u6743\uff0c\u6682\u65f6\u65e0\u6cd5\u5b8c\u6210\u652f\u4ed8");
     }
-    const profile = await bindReferralUser({
-      phone: phone.trim(),
-      inviteCode: pendingInviteCode || undefined,
+    const loginRes = await Taro.login();
+    if (!loginRes.code) {
+      throw new Error("\u5fae\u4fe1\u767b\u5f55\u5931\u8d25\uff0c\u672a\u83b7\u53d6\u5230\u767b\u5f55 code");
+    }
+
+    const inviteCode = pendingInviteCode || getPendingInviteCode();
+    if (inviteCode) {
+      setPendingInviteCode(inviteCode);
+      setStorePendingInviteCode(inviteCode);
+    }
+
+    const profile = await bindReferralUserByWechatPhone({
+      loginCode: loginRes.code,
+      phoneCode,
+      inviteCode: inviteCode || undefined,
       deviceToken: ensureDeviceToken(),
       source: `miniapp-pay-${theme}`
     });
+
     setReferralProfile(profile);
+    if (profile.wechatOpenid) {
+      setSessionOpenid(profile.wechatOpenid);
+      setStoreSessionOpenid(profile.wechatOpenid);
+    }
     return profile.phone;
   };
 
-  const handleWechatPay = async () => {
+  const handleWechatPay = async (event?: { detail?: { code?: string } }) => {
     if (Taro.getEnv() !== Taro.ENV_TYPE.WEAPP) {
-      setStatus("请在微信小程序环境里测试微信支付。");
+      setStatus("\u8bf7\u5728\u5fae\u4fe1\u5c0f\u7a0b\u5e8f\u73af\u5883\u91cc\u6d4b\u8bd5\u5fae\u4fe1\u652f\u4ed8\u3002");
       return;
     }
 
     setLoading(true);
     try {
-      const boundPhone = await ensureBoundPhone();
+      const boundPhone = referralProfile?.phone || (await bindByWechatPhone(event));
       const loginRes = await Taro.login();
       if (!loginRes.code) {
-        throw new Error("微信登录失败，未获取到登录 code");
+        throw new Error("\u5fae\u4fe1\u767b\u5f55\u5931\u8d25\uff0c\u672a\u83b7\u53d6\u5230\u767b\u5f55 code");
       }
 
       const response = await prepareWechatJsapi({
@@ -98,7 +117,7 @@ export default function PaymentPage() {
           scene: "wechat_jsapi",
           reportType: theme,
           amountFen: 2990,
-          subject: "深度解析服务",
+          subject: "\u6df1\u5ea6\u89e3\u6790\u670d\u52a1",
           returnUrl: "https://zodiac.njjyin.com",
           clientContext,
           phone: boundPhone
@@ -106,19 +125,24 @@ export default function PaymentPage() {
       });
 
       setLatestOutTradeNo(response.outTradeNo || "");
-      setStatus("订单已创建，正在拉起微信支付...");
+      setStatus("\u8ba2\u5355\u5df2\u521b\u5efa\uff0c\u6b63\u5728\u62c9\u8d77\u5fae\u4fe1\u652f\u4ed8...");
       await requestWechatPay((response.payPayload || {}) as WechatPayPayload);
 
       const latest: PaymentOrderResponse = response.outTradeNo ? await fetchOrder(response.outTradeNo) : response;
-      const token = latest.token || latest.accessToken || response.token || response.accessToken || "";
+      const token = latest.accessToken || response.accessToken || "";
       if (token) {
         setAccessToken(theme, token);
         setThemeModel(theme, "claude");
       }
-      Taro.showToast({ title: "支付成功", icon: "success" });
+      Taro.showToast({ title: "\u652f\u4ed8\u6210\u529f", icon: "success" });
+      setStatus(
+        latest.unlockSource === "ADMIN_APPROVED"
+          ? "\u8be5\u8ba2\u5355\u5df2\u7531\u540e\u53f0\u4eba\u5de5\u5ba1\u6279\u89e3\u9501\u3002"
+          : "\u8be5\u8ba2\u5355\u5df2\u652f\u4ed8\u6210\u529f\u5e76\u81ea\u52a8\u89e3\u9501\u5f53\u524d\u4e3b\u9898\u4e00\u6b21\u6df1\u5ea6\u89e3\u6790\u3002"
+      );
       setTimeout(() => Taro.navigateBack({ delta: 1 }), 500);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "支付发起失败，请稍后再试");
+      setStatus(error instanceof Error ? error.message : "\u652f\u4ed8\u53d1\u8d77\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u518d\u8bd5");
     } finally {
       setLoading(false);
     }
@@ -128,46 +152,43 @@ export default function PaymentPage() {
     <View className="page-shell">
       <View className="card payment-card">
         <Text className="payment-tag">WECHAT PAY</Text>
-        <Text className="section-title">深度解析支付</Text>
-        <Text className="section-subtitle">当前主题：{getThemeLabel(theme)} · 金额：29.9 元。支付成功后自动解锁当前主题一次深度解析。</Text>
+        <Text className="section-title">{"\u6df1\u5ea6\u89e3\u6790\u652f\u4ed8"}</Text>
+        <Text className="section-subtitle">
+          {`\u5f53\u524d\u4e3b\u9898\uff1a${getThemeLabel(theme)} \u00b7 \u91d1\u989d\uff1a29.9 \u5143\u3002\u652f\u4ed8\u6210\u529f\u540e\u81ea\u52a8\u89e3\u9501\u5f53\u524d\u4e3b\u9898\u4e00\u6b21\u6df1\u5ea6\u89e3\u6790\uff1b\u5982\u6709\u5f02\u5e38\uff0c\u540e\u53f0\u4e5f\u53ef\u4ee5\u4eba\u5de5\u5ba1\u6279\u89e3\u9501\u3002`}
+        </Text>
 
         <View className="payment-price-block">
-          <Text className="payment-price-symbol">￥</Text>
+          <Text className="payment-price-symbol">{"\u00a5"}</Text>
           <Text className="payment-price-value">29.9</Text>
         </View>
 
         <View className="payment-grid">
           <View className="payment-item">
-            <Text className="payment-item-title">微信支付体验</Text>
-            <Text className="payment-item-subtitle">支付按钮使用微信绿色，但整体底色仍保持当前星盘产品的深色科技感。</Text>
+            <Text className="payment-item-title">{"\u65e0\u611f\u8d26\u6237\u7ed1\u5b9a"}</Text>
+            <Text className="payment-item-subtitle">
+              {"\u70b9\u51fb\u652f\u4ed8\u6309\u94ae\u65f6\u4f1a\u540c\u6b65\u89e6\u53d1\u5fae\u4fe1\u624b\u673a\u53f7\u6388\u6743\u3002\u7cfb\u7edf\u81ea\u52a8\u5efa\u7acb\u624b\u673a\u53f7\u4e3b\u8d26\u6237\uff0c\u4e0d\u9700\u8981\u624b\u586b\u624b\u673a\u53f7\u3002"}
+            </Text>
           </View>
           <View className="payment-item">
-            <Text className="payment-item-title">解锁范围</Text>
-            <Text className="payment-item-subtitle">本次支付只解锁当前主题一次深度解析，不影响其他主题默认免费状态。</Text>
+            <Text className="payment-item-title">{"\u53cc\u901a\u9053\u89e3\u9501"}</Text>
+            <Text className="payment-item-subtitle">
+              {"\u4f18\u5148\u8d70\u652f\u4ed8\u6210\u529f\u81ea\u52a8\u89e3\u9501\uff1b\u5982\u679c\u56de\u8c03\u5f02\u5e38\uff0c\u540e\u53f0\u53ef\u5bf9\u8ba2\u5355\u505a\u4eba\u5de5\u5ba1\u6279\u89e3\u9501\uff0c\u5e76\u4fdd\u7559\u6765\u6e90\u6807\u8bc6\u3002"}
+            </Text>
           </View>
-        </View>
-
-        <View className="wallet-field">
-          <Text className="wallet-label">手机号</Text>
-          <Input
-            className="wallet-input"
-            value={phone}
-            placeholder="支付前请先绑定手机号"
-            onInput={(event) => setPhone(event.detail.value)}
-          />
         </View>
 
         <View className="payment-actions">
-          <View className="button-primary payment-wechat-button" onClick={loading ? undefined : handleWechatPay}>
-            {loading ? "正在拉起支付..." : "立即微信支付"}
-          </View>
-          <View className="button-secondary" onClick={() => Taro.navigateTo({ url: "/pages/wallet/index" })}>
-            查看邀请返现
-          </View>
+          <Button className="button-primary payment-wechat-button" openType="getPhoneNumber" loading={loading} onGetPhoneNumber={handleWechatPay}>
+            {loading ? "\u6b63\u5728\u62c9\u8d77\u652f\u4ed8..." : "\u7acb\u5373\u5fae\u4fe1\u652f\u4ed8"}
+          </Button>
         </View>
 
-        {latestOutTradeNo ? <Text className="payment-meta">最近订单号：{latestOutTradeNo}</Text> : null}
+        {latestOutTradeNo ? <Text className="payment-meta">{`\u6700\u8fd1\u8ba2\u5355\u53f7\uff1a${latestOutTradeNo}`}</Text> : null}
         <Text className="payment-status">{status}</Text>
+        {referralProfile?.phone ? <Text className="payment-meta">{`\u5f53\u524d\u8d26\u6237\uff1a${referralProfile.phone}`}</Text> : null}
+        <Text className="payment-meta">
+          {`\u5f53\u524d\u5e73\u53f0\uff1a${detectPlatform() === "WECHAT" ? "\u5fae\u4fe1\u5c0f\u7a0b\u5e8f" : "\u6296\u97f3\u5c0f\u7a0b\u5e8f"}`}
+        </Text>
       </View>
     </View>
   );

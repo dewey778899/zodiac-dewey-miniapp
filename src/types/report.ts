@@ -69,6 +69,8 @@ export interface PaymentOrderResponse {
   codeUrl?: string;
   mwebUrl?: string;
   paid?: boolean;
+  unlockStatus?: string;
+  unlockSource?: string;
 }
 
 export interface ReferralProfile {
@@ -83,6 +85,8 @@ export interface ReferralProfile {
   withdrawnFen: number;
   premiumPaidCount?: number;
   inviterEligible?: boolean;
+  wechatOpenid?: string;
+  unionid?: string;
 }
 
 export interface ReferralSummary extends ReferralProfile {

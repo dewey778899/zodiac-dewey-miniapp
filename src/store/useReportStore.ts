@@ -20,6 +20,7 @@ interface ReportStore {
   latestReport: CompatibilityResponse | null;
   referralProfile: ReferralProfile | null;
   pendingInviteCode: string;
+  sessionOpenid: string;
   stateByTheme: Record<ThemeType, ThemePeople>;
   setActiveTheme: (theme: ThemeType) => void;
   setThemeModel: (theme: ThemeType, model: ModelType) => void;
@@ -28,6 +29,7 @@ interface ReportStore {
   setLatestReport: (report: CompatibilityResponse | null) => void;
   setReferralProfile: (profile: ReferralProfile | null) => void;
   setPendingInviteCode: (inviteCode: string) => void;
+  setSessionOpenid: (openid: string) => void;
   updatePerson: (theme: ThemeType, side: "a" | "b", patch: Partial<PersonFormState>) => void;
 }
 
@@ -50,6 +52,7 @@ export const useReportStore = create<ReportStore>((set) => ({
   latestReport: null,
   referralProfile: null,
   pendingInviteCode: "",
+  sessionOpenid: "",
   stateByTheme: {
     love: { a: clonePerson(), b: clonePerson() },
     career: { a: clonePerson(), b: clonePerson() },
@@ -80,6 +83,7 @@ export const useReportStore = create<ReportStore>((set) => ({
   setLatestReport: (latestReport) => set({ latestReport }),
   setReferralProfile: (referralProfile) => set({ referralProfile }),
   setPendingInviteCode: (pendingInviteCode) => set({ pendingInviteCode }),
+  setSessionOpenid: (sessionOpenid) => set({ sessionOpenid }),
   updatePerson: (theme, side, patch) =>
     set((state) => ({
       stateByTheme: {

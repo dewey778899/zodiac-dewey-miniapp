@@ -13,7 +13,7 @@ import "./index.scss";
 export default function ReportPage() {
   const router = useRouter();
   const routeUid = router.params.uid || "";
-  const { latestReport, setLatestReport } = useReportStore();
+  const { latestReport, referralProfile, setLatestReport } = useReportStore();
   const [report, setReport] = useState<CompatibilityResponse | null>(
     latestReport && latestReport.reportUid === routeUid ? latestReport : null
   );
@@ -24,7 +24,7 @@ export default function ReportPage() {
     let mounted = true;
 
     if (!routeUid) {
-      setError("缺少报告编号");
+      setError("\u7f3a\u5c11\u62a5\u544a\u7f16\u53f7");
       setLoading(false);
       return;
     }
@@ -43,7 +43,7 @@ export default function ReportPage() {
       })
       .catch((fetchError) => {
         if (!mounted) return;
-        setError(fetchError instanceof Error ? fetchError.message : "报告加载失败");
+        setError(fetchError instanceof Error ? fetchError.message : "\u62a5\u544a\u52a0\u8f7d\u5931\u8d25");
       })
       .finally(() => {
         if (mounted) setLoading(false);
@@ -54,19 +54,20 @@ export default function ReportPage() {
     };
   }, [report, routeUid, setLatestReport]);
 
+  const inviteCode = referralProfile?.inviteCode || "";
   const shareInfo = useMemo(() => {
     if (!report) {
       return {
-        title: "小登哥星盘",
+        title: "\u5c0f\u767b\u54e5\u661f\u76d8",
         path: "/pages/home/index"
       };
     }
 
     return {
-      title: `${getReportTitle(report.reportType)} · ${report.relationshipType || "星盘洞察"}`,
-      path: buildSharePath(report.reportUid)
+      title: `${getReportTitle(report.reportType)} \u00b7 ${report.relationshipType || "\u661f\u76d8\u6d1e\u5bdf"}`,
+      path: buildSharePath(report.reportUid, inviteCode)
     };
-  }, [report]);
+  }, [inviteCode, report]);
 
   useShareAppMessage(() => shareInfo);
   useShareTimeline(() => ({
@@ -78,8 +79,8 @@ export default function ReportPage() {
     return (
       <View className="page-shell">
         <View className="card report-state-card">
-          <Text className="section-title">报告生成中</Text>
-          <Text className="section-subtitle">正在拉取最新内容，请稍候。</Text>
+          <Text className="section-title">{"\u62a5\u544a\u751f\u6210\u4e2d"}</Text>
+          <Text className="section-subtitle">{"\u6b63\u5728\u62c9\u53d6\u6700\u65b0\u5185\u5bb9\uff0c\u8bf7\u7a0d\u5019\u3002"}</Text>
         </View>
       </View>
     );
@@ -89,8 +90,8 @@ export default function ReportPage() {
     return (
       <View className="page-shell">
         <View className="card report-state-card">
-          <Text className="section-title">报告暂时不可用</Text>
-          <Text className="section-subtitle">{error || "报告数据为空"}</Text>
+          <Text className="section-title">{"\u62a5\u544a\u6682\u65f6\u4e0d\u53ef\u7528"}</Text>
+          <Text className="section-subtitle">{error || "\u62a5\u544a\u6570\u636e\u4e3a\u7a7a"}</Text>
         </View>
       </View>
     );
@@ -103,11 +104,18 @@ export default function ReportPage() {
       <ChapterList chapters={report.chapters || []} />
 
       <View className="report-actions">
-        <View className="button-primary" onClick={() => Taro.navigateTo({ url: `/pages/share/index?uid=${encodeURIComponent(report.reportUid)}` })}>
-          分享报告
+        <View
+          className="button-primary"
+          onClick={() =>
+            Taro.navigateTo({
+              url: `/pages/share/index?uid=${encodeURIComponent(report.reportUid)}${inviteCode ? `&invite=${encodeURIComponent(inviteCode)}` : ""}`
+            })
+          }
+        >
+          {"\u5206\u4eab\u62a5\u544a"}
         </View>
         <View className="button-secondary" onClick={() => Taro.navigateBack({ delta: 1 })}>
-          返回继续查看
+          {"\u8fd4\u56de\u7ee7\u7eed\u67e5\u770b"}
         </View>
       </View>
     </View>

@@ -1,36 +1,23 @@
 import { useEffect, useState } from "react";
 import Taro from "@tarojs/taro";
-import { Input, Text, View } from "@tarojs/components";
+import { Button, Input, Text, View } from "@tarojs/components";
 import {
-  bindReferralUser,
+  bindReferralUserByWechatPhone,
   createWithdrawal,
   fetchReferralRecords,
   fetchReferralSummary
 } from "../../api/compatibility";
 import { useReportStore } from "../../store/useReportStore";
 import type { ReferralBindingRecord, ReferralRewardRecord, ReferralSummary } from "../../types/report";
+import { detectPlatform, ensureDeviceToken, getPendingInviteCode, setPendingInviteCode } from "../../utils/auth";
 import "./index.scss";
 
 function fenToYuan(value = 0) {
   return (value / 100).toFixed(2);
 }
 
-function ensureDeviceToken() {
-  const key = "zodiac_device_token";
-  const existing = Taro.getStorageSync<string>(key);
-  if (existing) return existing;
-  const token = `mini-${Date.now()}-${Math.random().toString(16).slice(2, 10)}`;
-  Taro.setStorageSync(key, token);
-  return token;
-}
-
-function detectPlatform() {
-  return Taro.getEnv() === Taro.ENV_TYPE.WEAPP ? "WECHAT" : "DOUYIN";
-}
-
 export default function WalletPage() {
-  const { referralProfile, setReferralProfile, pendingInviteCode } = useReportStore();
-  const [phone, setPhone] = useState(referralProfile?.phone || "");
+  const { referralProfile, setReferralProfile, pendingInviteCode, setPendingInviteCode: setStorePendingInviteCode } = useReportStore();
   const [summary, setSummary] = useState<ReferralSummary | null>(null);
   const [rewards, setRewards] = useState<ReferralRewardRecord[]>([]);
   const [bindings, setBindings] = useState<ReferralBindingRecord[]>([]);
@@ -38,8 +25,8 @@ export default function WalletPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const loadData = async (currentPhone: string) => {
-    const [summaryRes, recordsRes] = await Promise.all([fetchReferralSummary(currentPhone), fetchReferralRecords(currentPhone)]);
+  const loadData = async (phone: string) => {
+    const [summaryRes, recordsRes] = await Promise.all([fetchReferralSummary(phone), fetchReferralRecords(phone)]);
     setSummary(summaryRes);
     setRewards(recordsRes.rewards || []);
     setBindings(recordsRes.bindings || []);
@@ -48,33 +35,42 @@ export default function WalletPage() {
 
   useEffect(() => {
     if (referralProfile?.phone) {
-      setPhone(referralProfile.phone);
       loadData(referralProfile.phone).catch((loadError) => {
-        setError(loadError instanceof Error ? loadError.message : "返现账户加载失败");
+        setError(loadError instanceof Error ? loadError.message : "\u8fd4\u73b0\u8d26\u6237\u52a0\u8f7d\u5931\u8d25");
       });
     }
   }, [referralProfile, setReferralProfile]);
 
-  const bindPhone = async () => {
-    if (!phone.trim()) {
-      setError("请先填写手机号");
+  const bindWechatPhone = async (event?: { detail?: { code?: string } }) => {
+    const phoneCode = event?.detail?.code;
+    if (!phoneCode) {
+      setError("\u4f60\u53d6\u6d88\u4e86\u624b\u673a\u53f7\u6388\u6743\uff0c\u6682\u65f6\u65e0\u6cd5\u67e5\u770b\u8fd4\u73b0\u8d26\u6237");
       return;
     }
     setLoading(true);
     setError("");
     try {
-      const profile = await bindReferralUser({
-        phone: phone.trim(),
-        inviteCode: pendingInviteCode || undefined,
+      const loginRes = await Taro.login();
+      if (!loginRes.code) {
+        throw new Error("\u5fae\u4fe1\u767b\u5f55\u5931\u8d25\uff0c\u672a\u83b7\u53d6\u5230\u767b\u5f55 code");
+      }
+      const inviteCode = pendingInviteCode || getPendingInviteCode();
+      if (inviteCode) {
+        setPendingInviteCode(inviteCode);
+        setStorePendingInviteCode(inviteCode);
+      }
+      const profile = await bindReferralUserByWechatPhone({
+        loginCode: loginRes.code,
+        phoneCode,
+        inviteCode: inviteCode || undefined,
         deviceToken: ensureDeviceToken(),
-        source: "miniapp-wallet",
-        platform: detectPlatform()
+        source: "miniapp-wallet"
       });
       setReferralProfile(profile);
       await loadData(profile.phone);
-      Taro.showToast({ title: "账户已绑定", icon: "success" });
+      Taro.showToast({ title: "\u8d26\u6237\u5df2\u7ed1\u5b9a", icon: "success" });
     } catch (bindError) {
-      setError(bindError instanceof Error ? bindError.message : "账户绑定失败");
+      setError(bindError instanceof Error ? bindError.message : "\u8d26\u6237\u7ed1\u5b9a\u5931\u8d25");
     } finally {
       setLoading(false);
     }
@@ -82,7 +78,7 @@ export default function WalletPage() {
 
   const applyWithdraw = async () => {
     if (!summary?.phone) {
-      setError("请先绑定返现账户");
+      setError("\u8bf7\u5148\u5b8c\u6210\u5fae\u4fe1\u624b\u673a\u53f7\u6388\u6743");
       return;
     }
     setLoading(true);
@@ -94,9 +90,9 @@ export default function WalletPage() {
         withdrawPlatform: detectPlatform()
       });
       await loadData(summary.phone);
-      Taro.showToast({ title: "提现申请已提交", icon: "success" });
+      Taro.showToast({ title: "\u63d0\u73b0\u7533\u8bf7\u5df2\u63d0\u4ea4", icon: "success" });
     } catch (withdrawError) {
-      setError(withdrawError instanceof Error ? withdrawError.message : "提现申请失败");
+      setError(withdrawError instanceof Error ? withdrawError.message : "\u63d0\u73b0\u7533\u8bf7\u5931\u8d25");
     } finally {
       setLoading(false);
     }
@@ -104,89 +100,94 @@ export default function WalletPage() {
 
   const shareInvite = async () => {
     if (!summary?.inviteCode) {
-      setError("请先绑定返现账户");
+      setError("\u8bf7\u5148\u5b8c\u6210\u8d26\u6237\u7ed1\u5b9a");
       return;
     }
-    await Taro.setClipboardData({
-      data: `https://zodiac.nccyin.com/?invite=${encodeURIComponent(summary.inviteCode)}`
+    await Taro.showShareMenu({
+      withShareTicket: true,
+      showShareItems: ["shareAppMessage", "shareTimeline"]
     });
-    Taro.showToast({ title: "邀请链接已复制", icon: "success" });
+    Taro.showToast({ title: "\u8bf7\u4f7f\u7528\u53f3\u4e0a\u89d2\u5206\u4eab", icon: "none" });
   };
 
   return (
     <View className="page-shell">
       <View className="card wallet-card">
-        <Text className="section-title">返现账户</Text>
-        <Text className="section-subtitle">先完成一次深度解析付费，再分享给好友。好友付费后，30% 会自动返到你的统一账户。</Text>
+        <Text className="section-title">{"\u8fd4\u73b0\u8d26\u6237"}</Text>
+        <Text className="section-subtitle">
+          {"\u7cfb\u7edf\u9ed8\u8ba4\u7528\u5fae\u4fe1\u624b\u673a\u53f7\u5efa\u7acb\u4f60\u7684\u4e3b\u8d26\u6237\u3002\u5206\u4eab\u65f6\u4f1a\u81ea\u52a8\u643a\u5e26\u4f60\u7684\u9080\u8bf7\u6807\u8bc6\uff0c\u597d\u53cb\u540e\u7eed\u4ed8\u8d39\u540e\u8fd4\u73b0\u4f1a\u81ea\u52a8\u8fdb\u5165\u8be5\u8d26\u6237\u3002"}
+        </Text>
 
-        <View className="wallet-field">
-          <Text className="wallet-label">手机号</Text>
-          <Input
-            className="wallet-input"
-            value={phone}
-            placeholder="请输入你的手机号"
-            onInput={(event) => setPhone(event.detail.value)}
-          />
-        </View>
-
-        <View className="wallet-actions">
-          <View className="button-primary" onClick={loading ? undefined : bindPhone}>
-            {loading ? "处理中..." : "绑定并查看账户"}
-          </View>
-          <View className="button-secondary" onClick={shareInvite}>
-            复制邀请链接
-          </View>
-        </View>
-
-        {summary ? (
-          <View className="wallet-summary">
-            <Text className="wallet-line">邀请码：{summary.inviteCode}</Text>
-            <Text className="wallet-line">累计返现：￥{fenToYuan(summary.balanceFen)}</Text>
-            <Text className="wallet-line">当前可用：￥{fenToYuan(summary.availableFen ?? summary.withdrawableFen)}</Text>
-            <Text className="wallet-line">提现中：￥{fenToYuan(summary.frozenFen)}</Text>
-            <Text className="wallet-line">已提现：￥{fenToYuan(summary.withdrawnFen)}</Text>
-            <Text className="wallet-line">邀请人数：{summary.inviteCount}</Text>
-            <Text className="wallet-line">返现订单：{summary.rewardCount}</Text>
-            <Text className="wallet-line">邀请资格：{summary.inviterEligible ? "已激活" : "需先完成一次深度解析付费"}</Text>
+        {!summary ? (
+          <View className="wallet-actions">
+            <Button className="button-primary" openType="getPhoneNumber" loading={loading} onGetPhoneNumber={bindWechatPhone}>
+              {loading ? "\u5904\u7406\u4e2d..." : "\u5fae\u4fe1\u6388\u6743\u5e76\u67e5\u770b\u8d26\u6237"}
+            </Button>
           </View>
         ) : null}
 
-        <View className="wallet-field">
-          <Text className="wallet-label">提现金额（分）</Text>
-          <Input
-            className="wallet-input"
-            value={withdrawAmount}
-            placeholder="例如 2990"
-            onInput={(event) => setWithdrawAmount(event.detail.value)}
-          />
-        </View>
+        {summary ? (
+          <>
+            <View className="wallet-summary">
+              <Text className="wallet-line">{`\u624b\u673a\u53f7\uff1a${summary.phone}`}</Text>
+              <Text className="wallet-line">{`\u9080\u8bf7\u7801\uff1a${summary.inviteCode}`}</Text>
+              <Text className="wallet-line">{`\u7d2f\u8ba1\u8fd4\u73b0\uff1a\u00a5${fenToYuan(summary.balanceFen)}`}</Text>
+              <Text className="wallet-line">{`\u5f53\u524d\u53ef\u7528\uff1a\u00a5${fenToYuan(summary.availableFen ?? summary.withdrawableFen)}`}</Text>
+              <Text className="wallet-line">{`\u63d0\u73b0\u4e2d\uff1a\u00a5${fenToYuan(summary.frozenFen)}`}</Text>
+              <Text className="wallet-line">{`\u5df2\u63d0\u73b0\uff1a\u00a5${fenToYuan(summary.withdrawnFen)}`}</Text>
+              <Text className="wallet-line">{`\u9080\u8bf7\u4eba\u6570\uff1a${summary.inviteCount}`}</Text>
+              <Text className="wallet-line">{`\u8fd4\u73b0\u8ba2\u5355\uff1a${summary.rewardCount}`}</Text>
+              <Text className="wallet-line">
+                {`\u9080\u8bf7\u8d44\u683c\uff1a${summary.inviterEligible ? "\u5df2\u6fc0\u6d3b" : "\u9700\u5148\u5b8c\u6210\u4e00\u6b21\u6df1\u5ea6\u89e3\u6790\u4ed8\u8d39"}`}
+              </Text>
+            </View>
 
-        <View className="button-primary" onClick={loading ? undefined : applyWithdraw}>
-          {loading ? "处理中..." : `提现到${detectPlatform() === "WECHAT" ? "微信" : "抖音"}钱包`}
-        </View>
+            <View className="wallet-actions">
+              <View className="button-secondary" onClick={shareInvite}>
+                {"\u5206\u4eab\u7ed9\u597d\u53cb"}
+              </View>
+            </View>
+
+            <View className="wallet-field">
+              <Text className="wallet-label">{"\u63d0\u73b0\u91d1\u989d\uff08\u5206\uff09"}</Text>
+              <Input
+                className="wallet-input"
+                value={withdrawAmount}
+                placeholder="\u4f8b\u5982 2990"
+                onInput={(event) => setWithdrawAmount(event.detail.value)}
+              />
+            </View>
+
+            <View className="button-primary" onClick={loading ? undefined : applyWithdraw}>
+              {loading
+                ? "\u5904\u7406\u4e2d..."
+                : `\u63d0\u73b0\u5230${detectPlatform() === "WECHAT" ? "\u5fae\u4fe1" : "\u6296\u97f3"}\u94b1\u5305`}
+            </View>
+          </>
+        ) : null}
 
         {error ? <View className="home-form-error">{error}</View> : null}
 
         <View className="wallet-section">
-          <Text className="wallet-section-title">最近返现记录</Text>
+          <Text className="wallet-section-title">{"\u6700\u8fd1\u8fd4\u73b0\u8bb0\u5f55"}</Text>
           {rewards.map((reward) => (
             <View className="wallet-record" key={`reward-${reward.id}`}>
-              <Text>+￥{fenToYuan(reward.amountFen)}</Text>
+              <Text>{`+\u00a5${fenToYuan(reward.amountFen)}`}</Text>
               <Text>{reward.status}</Text>
             </View>
           ))}
-          {!rewards.length ? <Text className="wallet-empty">暂时还没有返现记录</Text> : null}
+          {!rewards.length ? <Text className="wallet-empty">{"\u6682\u65f6\u8fd8\u6ca1\u6709\u8fd4\u73b0\u8bb0\u5f55"}</Text> : null}
         </View>
 
         <View className="wallet-section">
-          <Text className="wallet-section-title">邀请绑定</Text>
+          <Text className="wallet-section-title">{"\u9080\u8bf7\u7ed1\u5b9a"}</Text>
           {bindings.map((binding) => (
             <View className="wallet-record" key={`binding-${binding.id}`}>
               <Text>{binding.inviteCode}</Text>
               <Text>{binding.bindSource || "miniapp"}</Text>
             </View>
           ))}
-          {!bindings.length ? <Text className="wallet-empty">暂时还没有邀请绑定</Text> : null}
+          {!bindings.length ? <Text className="wallet-empty">{"\u6682\u65f6\u8fd8\u6ca1\u6709\u9080\u8bf7\u7ed1\u5b9a"}</Text> : null}
         </View>
       </View>
     </View>
