@@ -5,8 +5,8 @@
   "scripts": {
     "dev:weapp": "cross-env TARO_APP_API_BASE=http://127.0.0.1:8080 TARO_APP_WEB_SHARE_BASE=http://127.0.0.1:3000 taro build --type weapp --watch",
     "dev:tt": "cross-env TARO_APP_API_BASE=http://127.0.0.1:8080 TARO_APP_WEB_SHARE_BASE=http://127.0.0.1:3000 taro build --type tt --watch",
-    "build:weapp": "cross-env TARO_APP_API_BASE=http://zodiac.nccyin.com TARO_APP_WEB_SHARE_BASE=http://zodiac.nccyin.com taro build --type weapp",
-    "build:tt": "cross-env TARO_APP_API_BASE=http://zodiac.nccyin.com TARO_APP_WEB_SHARE_BASE=http://zodiac.nccyin.com taro build --type tt"
+    "build:weapp": "cross-env TARO_APP_API_BASE=https://xiaodengge.top TARO_APP_WEB_SHARE_BASE=https://xiaodengge.top taro build --type weapp",
+    "build:tt": "cross-env TARO_APP_API_BASE=https://xiaodengge.top TARO_APP_WEB_SHARE_BASE=https://xiaodengge.top taro build --type tt"
   },
   "dependencies": {
     "@tarojs/components": "4.0.9",

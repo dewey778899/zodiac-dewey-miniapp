@@ -118,7 +118,7 @@ export default function PaymentPage() {
           reportType: theme,
           amountFen: 2990,
           subject: "\u6df1\u5ea6\u89e3\u6790\u670d\u52a1",
-          returnUrl: "https://zodiac.njjyin.com",
+          returnUrl: "https://xiaodengge.top",
           clientContext,
           phone: boundPhone
         }
