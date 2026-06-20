@@ -116,7 +116,7 @@ export default function PaymentPage() {
           channel: "wechat",
           scene: "wechat_jsapi",
           reportType: theme,
-          amountFen: 2990,
+          amountFen: 1,
           subject: "\u6df1\u5ea6\u89e3\u6790\u670d\u52a1",
           returnUrl: "https://xiaodengge.top",
           clientContext,
@@ -159,7 +159,7 @@ export default function PaymentPage() {
 
         <View className="payment-price-block">
           <Text className="payment-price-symbol">{"\u00a5"}</Text>
-          <Text className="payment-price-value">29.9</Text>
+          <Text className="payment-price-value">0.01</Text>
         </View>
 
         <View className="payment-grid">

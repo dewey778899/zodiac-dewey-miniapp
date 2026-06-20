@@ -1,7 +1,7 @@
 import type { ModelType, ThemeType } from "../types/report";
 
-export const API_BASE = "https://xiaodengge.top";
-export const WEB_SHARE_BASE = "https://xiaodengge.top";
+export const API_BASE = "https://zodiac.xiaodengge.top";
+export const WEB_SHARE_BASE = "https://zodiac.xiaodengge.top";
 
 export const REPORT_THEMES: Array<{ key: ThemeType; label: string; subtitle: string; icon: string }> = [
   { key: "love", label: "\u7231\u60c5", subtitle: "\u53cc\u4eba\u5408\u76d8\u5173\u7cfb\u6d1e\u5bdf", icon: "\u2661" },
