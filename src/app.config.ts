@@ -8,7 +8,7 @@ export default defineAppConfig({
     "pages/unlock/index"
   ],
   window: {
-    navigationBarTitleText: "小登哥星盘",
+    navigationBarTitleText: "小登哥",
     navigationBarBackgroundColor: "#081521",
     navigationBarTextStyle: "white",
     backgroundColor: "#081521",

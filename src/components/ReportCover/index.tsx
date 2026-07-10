@@ -12,14 +12,14 @@ export function ReportCover({ report }: Props) {
 
   return (
     <View className="report-cover card">
-      <Text className="report-cover-kicker">SOULMATE COMPATIBILITY</Text>
+      <Text className="report-cover-kicker">RELATIONSHIP INSIGHT</Text>
       <Text className="report-cover-title">{getReportTitle(report.reportType)}</Text>
       <View className="report-cover-score-row">
         <Text className="report-cover-score">{report.score ?? "--"}</Text>
         <Text className="report-cover-score-unit">/100</Text>
       </View>
       <Text className="report-cover-type">{report.relationshipType || "关系洞察"}</Text>
-      <Text className="report-cover-tagline">{report.tagline || "打开完整报告查看星盘细节"}</Text>
+      <Text className="report-cover-tagline">{report.tagline || "打开查看详细内容"}</Text>
 
       <View className={`report-cover-people ${isLove ? "double" : "single"}`}>
         <View className="report-cover-person">
@@ -29,7 +29,7 @@ export function ReportCover({ report }: Props) {
         </View>
         {isLove ? (
           <>
-            <Text className="report-cover-heart">❤</Text>
+            <Text className="report-cover-heart">♥</Text>
             <View className="report-cover-person">
               <Text className="report-cover-symbol">{getZodiacSymbol(report.zodiacB?.sun)}</Text>
               <Text className="report-cover-zodiac">{String(report.zodiacB?.sun || "MOON").toUpperCase()}</Text>

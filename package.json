@@ -5,8 +5,8 @@
   "scripts": {
     "dev:weapp": "cross-env TARO_APP_API_BASE=http://127.0.0.1:8080 TARO_APP_WEB_SHARE_BASE=http://127.0.0.1:3000 taro build --type weapp --watch",
     "dev:tt": "cross-env TARO_APP_API_BASE=http://127.0.0.1:8080 TARO_APP_WEB_SHARE_BASE=http://127.0.0.1:3000 taro build --type tt --watch",
-    "build:weapp": "cross-env TARO_APP_API_BASE=https://xiaodengge.top TARO_APP_WEB_SHARE_BASE=https://xiaodengge.top taro build --type weapp",
-    "build:tt": "cross-env TARO_APP_API_BASE=https://xiaodengge.top TARO_APP_WEB_SHARE_BASE=https://xiaodengge.top taro build --type tt"
+    "build:weapp": "cross-env TARO_APP_WEB_SHARE_BASE=https://zodiac.xiaodengge.top taro build --type weapp",
+    "build:tt": "cross-env TARO_APP_API_BASE=https://zodiac.xiaodengge.top TARO_APP_WEB_SHARE_BASE=https://zodiac.xiaodengge.top taro build --type tt"
   },
   "dependencies": {
     "@tarojs/components": "4.0.9",
@@ -18,8 +18,8 @@
     "@tarojs/runtime": "4.0.9",
     "@tarojs/shared": "4.0.9",
     "@tarojs/taro": "4.0.9",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "zustand": "4.5.5"
   },
   "devDependencies": {
@@ -29,8 +29,8 @@
     "@babel/preset-typescript": "7.24.7",
     "@tarojs/cli": "4.0.9",
     "@tarojs/webpack5-runner": "4.0.9",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "18.2.79",
+    "@types/react-dom": "18.2.25",
     "babel-preset-taro": "4.0.9",
     "cross-env": "7.0.3",
     "typescript": "5.5.4"

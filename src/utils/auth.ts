@@ -13,7 +13,7 @@ export function ensureDeviceToken() {
 }
 
 export function detectPlatform() {
-  return Taro.getEnv() === Taro.ENV_TYPE.WEAPP ? "WECHAT" : "DOUYIN";
+  return Taro.getEnv() === Taro.ENV_TYPE.WEAPP ? "WECHAT" : "WECHAT";
 }
 
 export function setPendingInviteCode(inviteCode: string) {

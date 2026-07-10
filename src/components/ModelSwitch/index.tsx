@@ -20,7 +20,7 @@ export function ModelSwitch({ activeModel, premiumUnlocked, onChange }: Props) {
         >
           <Text className="model-chip-label">{MODEL_COPY[model].label}</Text>
           <Text className="model-chip-badge">
-            {model === "claude" && premiumUnlocked ? "\u5df2\u89e3\u9501" : MODEL_COPY[model].badge}
+            {model === "claude" && premiumUnlocked ? "已开通" : MODEL_COPY[model].badge}
           </Text>
         </View>
       ))}

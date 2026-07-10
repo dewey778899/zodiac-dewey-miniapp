@@ -3,8 +3,8 @@ import { WEB_SHARE_BASE, ZODIAC_SYMBOLS } from "./constants";
 
 export function getZodiacSymbol(value?: string) {
   const normalized = String(value || "").trim();
-  if (!normalized) return "\u2726";
-  return ZODIAC_SYMBOLS[normalized] || ZODIAC_SYMBOLS[normalized.toUpperCase()] || "\u2726";
+  if (!normalized) return "✦";
+  return ZODIAC_SYMBOLS[normalized] || ZODIAC_SYMBOLS[normalized.toUpperCase()] || "✦";
 }
 
 export function buildSharePath(reportUid: string, inviteCode?: string) {
@@ -37,20 +37,20 @@ export function buildPersonPayload(person: PersonFormState) {
 }
 
 export function validateThemeForm(theme: ThemeType, personA: PersonFormState, personB?: PersonFormState) {
-  if (!personA.name.trim()) return "\u8bf7\u5148\u586b\u5199\u4f60\u7684\u540d\u5b57";
-  if (!personA.birthDate) return "\u8bf7\u5148\u9009\u62e9\u4f60\u7684\u751f\u65e5";
+  if (!personA.name.trim()) return "请先填写你的名字";
+  if (!personA.birthDate) return "请先选择你的生日";
   if (!personA.birthProvince || !personA.birthCity || !personA.birthDistrict) {
-    return "\u8bf7\u5b8c\u6574\u9009\u62e9\u4f60\u7684\u51fa\u751f\u5730";
+    return "请完整选择你的出生地";
   }
 
   if (theme === "love") {
-    if (!personB || !personB.name.trim()) return "\u8bf7\u5148\u586b\u5199 TA \u7684\u540d\u5b57";
-    if (!personB.birthDate) return "\u8bf7\u5148\u9009\u62e9 TA \u7684\u751f\u65e5";
+    if (!personB || !personB.name.trim()) return "请先填写对方名字";
+    if (!personB.birthDate) return "请先选择对方生日";
     if (!personB.birthProvince || !personB.birthCity || !personB.birthDistrict) {
-      return "\u8bf7\u5b8c\u6574\u9009\u62e9 TA \u7684\u51fa\u751f\u5730";
+      return "请完整选择对方出生地";
     }
     if ((personA.gender || "").toLowerCase() === (personB.gender || "").toLowerCase()) {
-      return "\u7231\u60c5\u5408\u76d8\u6682\u4e0d\u652f\u6301\u540c\u4e00\u6027\u522b\u7ec4\u5408";
+      return "当前双人关系主题暂不支持相同性别组合";
     }
   }
 
@@ -58,9 +58,9 @@ export function validateThemeForm(theme: ThemeType, personA: PersonFormState, pe
 }
 
 export function getReportTitle(reportType: ThemeType) {
-  if (reportType === "love") return "\u7231\u60c5\u5408\u76d8";
-  if (reportType === "career") return "\u4e8b\u4e1a\u62a5\u544a";
-  return "\u8d22\u8fd0\u62a5\u544a";
+  if (reportType === "love") return "关系解读内容";
+  if (reportType === "career") return "职业状态内容";
+  return "生活节奏内容";
 }
 
 export function getReportDateText() {
@@ -74,8 +74,8 @@ export function getReportDateText() {
 export function buildSharePosterText(report: CompatibilityResponse, inviteCode?: string) {
   return [
     getReportTitle(report.reportType),
-    report.relationshipType || "\u661f\u76d8\u6d1e\u5bdf",
-    report.tagline || "\u6253\u5f00\u67e5\u770b\u5b8c\u6574\u62a5\u544a",
+    report.relationshipType || "关系洞察",
+    report.tagline || "打开查看详细内容",
     `COLLECTOR CODE ${report.reportUid}`,
     buildWebShareUrl(report.reportUid, inviteCode)
   ].join("\n");

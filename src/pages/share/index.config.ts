@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: "分享报告"
+  navigationBarTitleText: "分享内容"
 });

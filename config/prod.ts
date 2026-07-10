@@ -6,8 +6,8 @@ export default defineConfig(async (): Promise<UserConfigExport<"webpack5">> => {
     ...baseConfig,
     env: {
       NODE_ENV: '"production"',
-      TARO_APP_API_BASE: JSON.stringify(process.env.TARO_APP_API_BASE || "https://xiaodengge.top"),
-      TARO_APP_WEB_SHARE_BASE: JSON.stringify(process.env.TARO_APP_WEB_SHARE_BASE || "https://xiaodengge.top")
+      TARO_APP_API_BASE: JSON.stringify(process.env.TARO_APP_API_BASE || "https://zodiac.xiaodengge.top"),
+      TARO_APP_WEB_SHARE_BASE: JSON.stringify(process.env.TARO_APP_WEB_SHARE_BASE || "https://zodiac.xiaodengge.top")
     },
     mini: {
       webpackChain(chain) {

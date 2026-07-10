@@ -19,7 +19,12 @@ export default defineConfig({
   plugins: [],
   defineConstants: {},
   copy: {
-    patterns: [],
+    patterns: [
+      {
+        from: "static/common.js",
+        to: "dist/common.js"
+      }
+    ],
     options: {}
   },
   mini: {

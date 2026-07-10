@@ -11,8 +11,8 @@ RUN npm ci
 COPY . .
 
 ARG MINIAPP_TARGET=weapp
-ARG TARO_APP_API_BASE=https://xiaodengge.top
-ARG TARO_APP_WEB_SHARE_BASE=https://xiaodengge.top
+ARG TARO_APP_API_BASE=https://zodiac.xiaodengge.top
+ARG TARO_APP_WEB_SHARE_BASE=https://zodiac.xiaodengge.top
 
 ENV TARO_APP_API_BASE=${TARO_APP_API_BASE}
 ENV TARO_APP_WEB_SHARE_BASE=${TARO_APP_WEB_SHARE_BASE}

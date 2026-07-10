@@ -48,7 +48,9 @@ export function LunarConverter({ visible, onClose }: Props) {
 
     const parsed = parseLunarMonthValue(lunarMonthValue);
     const solar = lunarToSolar(lunarYear, parsed.month, lunarDay, parsed.isLeap);
-    const lunarLabel = `${parsed.isLeap ? "闰" : ""}${lunarMonthOptions.find((item) => item.value === lunarMonthValue)?.label || ""}${lunarDayOptions.find((item) => item.value === lunarDay)?.label || ""}`;
+    const monthLabel = lunarMonthOptions.find((item) => item.value === lunarMonthValue)?.label || "";
+    const dayLabel = lunarDayOptions.find((item) => item.value === lunarDay)?.label || "";
+    const lunarLabel = `${parsed.isLeap ? "闰" : ""}${monthLabel}${dayLabel}`;
     setResult({
       main: formatSolarWithWeekday(solar),
       sub: `农历 ${lunarYear}年 ${lunarLabel}`
@@ -58,8 +60,8 @@ export function LunarConverter({ visible, onClose }: Props) {
   if (!visible) return null;
 
   return (
-    <View className="lunar-modal-mask" onClick={onClose}>
-      <View className="lunar-modal-card" onClick={(event) => event.stopPropagation()}>
+    <View className="lunar-modal-mask">
+      <View className="lunar-modal-card">
         <View className="lunar-modal-head">
           <Text className="lunar-modal-tag">LUNAR CONVERTER</Text>
           <Text className="lunar-modal-title">公历农历互转</Text>

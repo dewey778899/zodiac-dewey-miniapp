@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: "小登哥星盘"
+  navigationBarTitleText: "小登哥"
 });

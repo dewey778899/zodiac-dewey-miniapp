@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: "深度解析解锁"
+  navigationBarTitleText: "支付查看"
 });

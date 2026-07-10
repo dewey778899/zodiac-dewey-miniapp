@@ -10,8 +10,8 @@ export function EssenceList({ items }: Props) {
 
   return (
     <View className="card essence-card">
-      <Text className="section-title">珍藏锦囊</Text>
-      <Text className="section-subtitle">提炼这份报告里最值得记住的几个关键信息。</Text>
+      <Text className="section-title">重点摘要</Text>
+      <Text className="section-subtitle">提炼这份内容里最值得记住的几条关键信息。</Text>
       <View className="essence-list">
         {items.map((item, index) => (
           <View className="essence-item" key={`${item}-${index}`}>

@@ -30,6 +30,12 @@ export function fetchOrder(outTradeNo: string) {
   return request<PaymentOrderResponse>(`/api/pay/orders/${encodeURIComponent(outTradeNo)}`);
 }
 
+export function devMarkOrderPaid(outTradeNo: string) {
+  return request<PaymentOrderResponse>(`/api/pay/dev/mark-paid/${encodeURIComponent(outTradeNo)}`, {
+    method: "POST"
+  });
+}
+
 export function bindReferralUser(data: Record<string, unknown>) {
   return request<ReferralProfile>("/api/referral/bind", {
     method: "POST",

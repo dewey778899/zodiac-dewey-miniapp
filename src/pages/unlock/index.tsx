@@ -1,32 +1,25 @@
-import Taro, { useRouter } from "@tarojs/taro";
-import { Text, View } from "@tarojs/components";
-import type { ThemeType } from "../../types/report";
+import { Button, Text, View } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import "./index.scss";
 
 export default function UnlockPage() {
-  const router = useRouter();
-  const theme = ((router.params.theme as ThemeType) || "love") as ThemeType;
-
   return (
     <View className="page-shell">
       <View className="card unlock-card">
-        <Text className="section-title">深度解析已改为付费解锁</Text>
-        <Text className="section-subtitle">当前不再使用关注解锁。请直接进入微信支付页，完成 29.9 元支付后再回到表单页生成深度报告。</Text>
+        <Text className="section-title" style={{ color: "#ffffff" }}>
+          支付查看
+        </Text>
+        <Text className="section-subtitle" style={{ color: "rgba(255,255,255,0.78)" }}>
+          当前版本仅保留支付查看链路，完成支付后即可回到支付页同步最新状态。
+        </Text>
 
         <View className="unlock-actions">
-          <View
-            className="button-primary"
-            onClick={() =>
-              Taro.redirectTo({
-                url: `/pages/payment/index?theme=${theme}`
-              })
-            }
-          >
-            去微信支付
-          </View>
-          <View className="button-secondary" onClick={() => Taro.navigateBack({ delta: 1 })}>
-            返回
-          </View>
+          <Button className="button-primary" onClick={() => Taro.navigateTo({ url: "/pages/payment/index?theme=love" })}>
+            去支付查看
+          </Button>
+          <Button className="button-secondary" onClick={() => Taro.navigateBack()}>
+            返回上一页
+          </Button>
         </View>
       </View>
     </View>
