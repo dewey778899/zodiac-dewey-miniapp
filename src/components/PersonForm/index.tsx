@@ -52,7 +52,7 @@ export function PersonForm({ title, value, onChange }: Props) {
       </View>
 
       <View className="field">
-        <Text className="field-label">生日</Text>
+        <Text className="field-label">日期</Text>
         <Picker
           mode="date"
           value={value.birthDate}
@@ -61,19 +61,19 @@ export function PersonForm({ title, value, onChange }: Props) {
           fields="day"
           onChange={(event) => onChange({ birthDate: event.detail.value })}
         >
-          <View className="field-input picker-input">{value.birthDate || "请选择生日"}</View>
+          <View className="field-input picker-input">{value.birthDate || "请选择日期"}</View>
         </Picker>
       </View>
 
       <View className="field">
-        <Text className="field-label">出生时间</Text>
+        <Text className="field-label">时间</Text>
         <Picker mode="time" value={value.birthTime} onChange={(event) => onChange({ birthTime: event.detail.value })}>
           <View className="field-input picker-input">{value.birthTime || "12:30"}</View>
         </Picker>
       </View>
 
       <View className="field">
-        <Text className="field-label">出生地</Text>
+        <Text className="field-label">地区</Text>
         <Picker
           mode="region"
           value={regionValue}

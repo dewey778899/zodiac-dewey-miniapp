@@ -27,30 +27,3 @@ export const DEFAULT_PERSON = {
   birthLongitude: null,
   birthTimezone: "Asia/Shanghai"
 };
-
-export const ZODIAC_SYMBOLS: Record<string, string> = {
-  ARIES: "白羊",
-  TAURUS: "金牛",
-  GEMINI: "双子",
-  CANCER: "巨蟹",
-  LEO: "狮子",
-  VIRGO: "处女",
-  LIBRA: "天秤",
-  SCORPIO: "天蝎",
-  SAGITTARIUS: "射手",
-  CAPRICORN: "摩羯",
-  AQUARIUS: "水瓶",
-  PISCES: "双鱼",
-  白羊座: "白羊",
-  金牛座: "金牛",
-  双子座: "双子",
-  巨蟹座: "巨蟹",
-  狮子座: "狮子",
-  处女座: "处女",
-  天秤座: "天秤",
-  天蝎座: "天蝎",
-  射手座: "射手",
-  摩羯座: "摩羯",
-  水瓶座: "水瓶",
-  双鱼座: "双鱼"
-};

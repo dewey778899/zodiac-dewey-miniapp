@@ -1,6 +1,6 @@
 import { Text, View } from "@tarojs/components";
 import type { CompatibilityResponse } from "../../types/report";
-import { getReportDateText, getReportTitle, getZodiacSymbol } from "../../utils/report";
+import { getReportDateText, getReportTitle } from "../../utils/report";
 import "./index.scss";
 
 interface Props {
@@ -23,16 +23,16 @@ export function ReportCover({ report }: Props) {
 
       <View className={`report-cover-people ${isLove ? "double" : "single"}`}>
         <View className="report-cover-person">
-          <Text className="report-cover-symbol">{getZodiacSymbol(report.zodiacA?.sun)}</Text>
-          <Text className="report-cover-zodiac">{String(report.zodiacA?.sun || "SUN").toUpperCase()}</Text>
+          <Text className="report-cover-symbol">A</Text>
+          <Text className="report-cover-zodiac">维度 A</Text>
           <Text className="report-cover-name">{report.personA?.name || "我"}</Text>
         </View>
         {isLove ? (
           <>
             <Text className="report-cover-heart">♥</Text>
             <View className="report-cover-person">
-              <Text className="report-cover-symbol">{getZodiacSymbol(report.zodiacB?.sun)}</Text>
-              <Text className="report-cover-zodiac">{String(report.zodiacB?.sun || "MOON").toUpperCase()}</Text>
+              <Text className="report-cover-symbol">B</Text>
+              <Text className="report-cover-zodiac">维度 B</Text>
               <Text className="report-cover-name">{report.personB?.name || "TA"}</Text>
             </View>
           </>

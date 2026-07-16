@@ -4,8 +4,7 @@ export default defineAppConfig({
     "pages/report/index",
     "pages/share/index",
     "pages/payment/index",
-    "pages/wallet/index",
-    "pages/unlock/index"
+    "pages/wallet/index"
   ],
   window: {
     navigationBarTitleText: "小登哥",

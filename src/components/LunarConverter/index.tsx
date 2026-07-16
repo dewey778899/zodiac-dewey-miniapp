@@ -53,7 +53,7 @@ export function LunarConverter({ visible, onClose }: Props) {
     const lunarLabel = `${parsed.isLeap ? "闰" : ""}${monthLabel}${dayLabel}`;
     setResult({
       main: formatSolarWithWeekday(solar),
-      sub: `农历 ${lunarYear}年 ${lunarLabel}`
+      sub: `传统日期 ${lunarYear}年 ${lunarLabel}`
     });
   };
 
@@ -63,8 +63,8 @@ export function LunarConverter({ visible, onClose }: Props) {
     <View className="lunar-modal-mask">
       <View className="lunar-modal-card">
         <View className="lunar-modal-head">
-          <Text className="lunar-modal-tag">LUNAR CONVERTER</Text>
-          <Text className="lunar-modal-title">公历农历互转</Text>
+          <Text className="lunar-modal-tag">DATE CONVERTER</Text>
+          <Text className="lunar-modal-title">日期转换</Text>
           <Text className="lunar-modal-close" onClick={onClose}>
             ×
           </Text>
@@ -72,10 +72,10 @@ export function LunarConverter({ visible, onClose }: Props) {
 
         <View className="lunar-tabs">
           <View className={`lunar-tab ${mode === "solarToLunar" ? "active" : ""}`} onClick={() => setMode("solarToLunar")}>
-            公历转农历
+            标准转传统
           </View>
           <View className={`lunar-tab ${mode === "lunarToSolar" ? "active" : ""}`} onClick={() => setMode("lunarToSolar")}>
-            农历转公历
+            传统转标准
           </View>
         </View>
 
