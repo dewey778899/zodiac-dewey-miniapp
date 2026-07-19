@@ -153,7 +153,7 @@ export default function WalletPage() {
               <Input
                 className="wallet-input"
                 value={withdrawAmount}
-                placeholder="\u4f8b\u5982 2990"
+                placeholder="例如 2990"
                 onInput={(event) => setWithdrawAmount(event.detail.value)}
               />
             </View>

@@ -203,9 +203,9 @@ export default function HomePage() {
         {"\u597d\u53cb\u901a\u8fc7\u4f60\u7684\u5206\u4eab\u8fdb\u5165\u5e76\u5b8c\u6210\u6269\u5c55\u5185\u5bb9\u4ed8\u8d39\u540e\uff0c\u8fd4\u73b0\u4f1a\u81ea\u52a8\u8fdb\u5165\u4f60\u7684\u7edf\u4e00\u8d26\u6237\u3002"}
       </View>
 
-      <PersonForm title="\u6211\u7684\u4fe1\u606f" value={personA} onChange={(patch) => updateCurrentPerson("a", patch)} />
+      <PersonForm title="我的信息" value={personA} onChange={(patch) => updateCurrentPerson("a", patch)} />
       {activeTheme === "love" ? (
-        <PersonForm title="TA \u7684\u4fe1\u606f" value={personB} onChange={(patch) => updateCurrentPerson("b", patch)} />
+        <PersonForm title="TA 的信息" value={personB} onChange={(patch) => updateCurrentPerson("b", patch)} />
       ) : null}
 
       {submitting ? (
