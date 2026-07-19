@@ -6,6 +6,7 @@ export default defineAppConfig({
     "pages/payment/index",
     "pages/wallet/index"
   ],
+  lazyCodeLoading: "requiredComponents",
   window: {
     navigationBarTitleText: "小登哥",
     navigationBarBackgroundColor: "#081521",
