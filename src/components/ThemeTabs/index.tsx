@@ -17,8 +17,8 @@ export function ThemeTabs({ activeTheme, onChange }: Props) {
           className={`pill-tab theme-tab ${item.key === activeTheme ? "active" : ""}`}
           onClick={() => onChange(item.key)}
         >
-          <Text className="theme-tab-icon">{item.icon}</Text>
           <Text className="theme-tab-text">{item.label}</Text>
+          <Text className="theme-tab-subtitle">{item.subtitle}</Text>
         </View>
       ))}
     </View>

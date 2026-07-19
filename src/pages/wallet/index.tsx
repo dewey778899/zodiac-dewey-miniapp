@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Taro from "@tarojs/taro";
+import Taro, { useRouter, useShareAppMessage } from "@tarojs/taro";
 import { Button, Input, Text, View } from "@tarojs/components";
 import {
   bindReferralUserByWechatPhone,
@@ -16,14 +16,25 @@ function fenToYuan(value = 0) {
   return (value / 100).toFixed(2);
 }
 
+function yuanToFen(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return 0;
+  const amount = Number(normalized);
+  if (!Number.isFinite(amount)) return 0;
+  return Math.round(amount * 100);
+}
+
 export default function WalletPage() {
+  const router = useRouter();
+  const routeInvite = String(router.params.invite || "");
   const { referralProfile, setReferralProfile, pendingInviteCode, setPendingInviteCode: setStorePendingInviteCode } = useReportStore();
   const [summary, setSummary] = useState<ReferralSummary | null>(null);
   const [rewards, setRewards] = useState<ReferralRewardRecord[]>([]);
   const [bindings, setBindings] = useState<ReferralBindingRecord[]>([]);
-  const [withdrawAmount, setWithdrawAmount] = useState("2990");
+  const [withdrawAmount, setWithdrawAmount] = useState("29.90");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const availableFen = summary ? summary.availableFen ?? summary.withdrawableFen : 0;
 
   const loadData = async (phone: string) => {
     const [summaryRes, recordsRes] = await Promise.all([fetchReferralSummary(phone), fetchReferralRecords(phone)]);
@@ -34,12 +45,24 @@ export default function WalletPage() {
   };
 
   useEffect(() => {
+    if (routeInvite) {
+      setPendingInviteCode(routeInvite);
+      setStorePendingInviteCode(routeInvite);
+    }
+  }, [routeInvite, setStorePendingInviteCode]);
+
+  useEffect(() => {
     if (referralProfile?.phone) {
       loadData(referralProfile.phone).catch((loadError) => {
         setError(loadError instanceof Error ? loadError.message : "\u8fd4\u73b0\u8d26\u6237\u52a0\u8f7d\u5931\u8d25");
       });
     }
   }, [referralProfile, setReferralProfile]);
+
+  useShareAppMessage(() => ({
+    title: "\u5c0f\u767b\u54e5\u5185\u5bb9\u52a9\u624b",
+    path: summary?.inviteCode ? `/pages/wallet/index?invite=${encodeURIComponent(summary.inviteCode)}` : "/pages/home/index"
+  }));
 
   const bindWechatPhone = async (event?: { detail?: { code?: string } }) => {
     const phoneCode = event?.detail?.code;
@@ -54,7 +77,7 @@ export default function WalletPage() {
       if (!loginRes.code) {
         throw new Error("\u5fae\u4fe1\u767b\u5f55\u5931\u8d25\uff0c\u672a\u83b7\u53d6\u5230\u767b\u5f55 code");
       }
-      const inviteCode = pendingInviteCode || getPendingInviteCode();
+      const inviteCode = pendingInviteCode || routeInvite || getPendingInviteCode();
       if (inviteCode) {
         setPendingInviteCode(inviteCode);
         setStorePendingInviteCode(inviteCode);
@@ -81,12 +104,23 @@ export default function WalletPage() {
       setError("\u8bf7\u5148\u5b8c\u6210\u5fae\u4fe1\u624b\u673a\u53f7\u6388\u6743");
       return;
     }
+    const amountFen = yuanToFen(withdrawAmount);
+    if (amountFen <= 0) {
+      setError("\u8bf7\u8f93\u5165\u6b63\u786e\u7684\u63d0\u73b0\u91d1\u989d");
+      return;
+    }
+    if (amountFen > availableFen) {
+      const message = `\u63d0\u73b0\u91d1\u989d\u8d85\u8fc7\u5f53\u524d\u53ef\u63d0\u73b0\u4f59\u989d\uff08\u5f53\u524d\u53ef\u63d0\u73b0 \u00a5${fenToYuan(availableFen)}\uff09`;
+      setError(message);
+      Taro.showToast({ title: "\u91d1\u989d\u8d85\u8fc7\u53ef\u63d0\u4f59\u989d", icon: "none" });
+      return;
+    }
     setLoading(true);
     setError("");
     try {
       await createWithdrawal({
         phone: summary.phone,
-        amountFen: Number(withdrawAmount),
+        amountFen,
         withdrawPlatform: detectPlatform()
       });
       await loadData(summary.phone);
@@ -96,18 +130,6 @@ export default function WalletPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const shareInvite = async () => {
-    if (!summary?.inviteCode) {
-      setError("\u8bf7\u5148\u5b8c\u6210\u8d26\u6237\u7ed1\u5b9a");
-      return;
-    }
-    await Taro.showShareMenu({
-      withShareTicket: true,
-      showShareItems: ["shareAppMessage", "shareTimeline"]
-    });
-    Taro.showToast({ title: "\u5206\u4eab\u5165\u53e3\u5df2\u5f00\u542f", icon: "none" });
   };
 
   return (
@@ -129,10 +151,10 @@ export default function WalletPage() {
         {summary ? (
           <>
             <View className="wallet-summary">
-              <Text className="wallet-line">{`\u624b\u673a\u53f7\uff1a${summary.phone}`}</Text>
+              <Text className="wallet-line">{`\u7ed1\u5b9a\u624b\u673a\u53f7\uff1a${summary.phone}`}</Text>
               <Text className="wallet-line">{`\u9080\u8bf7\u7801\uff1a${summary.inviteCode}`}</Text>
               <Text className="wallet-line">{`\u7d2f\u8ba1\u8fd4\u73b0\uff1a\u00a5${fenToYuan(summary.balanceFen)}`}</Text>
-              <Text className="wallet-line">{`\u5f53\u524d\u53ef\u7528\uff1a\u00a5${fenToYuan(summary.availableFen ?? summary.withdrawableFen)}`}</Text>
+              <Text className="wallet-line wallet-line-strong">{`\u5f53\u524d\u53ef\u63d0\u73b0\uff1a\u00a5${fenToYuan(availableFen)}`}</Text>
               <Text className="wallet-line">{`\u63d0\u73b0\u4e2d\uff1a\u00a5${fenToYuan(summary.frozenFen)}`}</Text>
               <Text className="wallet-line">{`\u5df2\u63d0\u73b0\uff1a\u00a5${fenToYuan(summary.withdrawnFen)}`}</Text>
               <Text className="wallet-line">{`\u9080\u8bf7\u4eba\u6570\uff1a${summary.inviteCount}`}</Text>
@@ -143,19 +165,25 @@ export default function WalletPage() {
             </View>
 
             <View className="wallet-actions">
-              <View className="button-secondary" onClick={shareInvite}>
+              <Button className="button-secondary wallet-share-button" openType="share">
                 {"\u5206\u4eab\u7ed9\u597d\u53cb"}
-              </View>
+              </Button>
             </View>
 
             <View className="wallet-field">
-              <Text className="wallet-label">{"\u63d0\u73b0\u91d1\u989d\uff08\u5206\uff09"}</Text>
-              <Input
-                className="wallet-input"
-                value={withdrawAmount}
-                placeholder="例如 2990"
-                onInput={(event) => setWithdrawAmount(event.detail.value)}
-              />
+              <Text className="wallet-label">{"\u63d0\u73b0\u91d1\u989d\uff08\u5143\uff09"}</Text>
+              <View className="wallet-input-wrap">
+                <Text className="wallet-input-prefix">{"\u00a5"}</Text>
+                <Input
+                  className="wallet-input"
+                  value={withdrawAmount}
+                  type="digit"
+                  placeholder="29.90"
+                  onInput={(event) => setWithdrawAmount(event.detail.value)}
+                />
+                <Text className="wallet-input-edit">{"\u53ef\u4fee\u6539"}</Text>
+              </View>
+              <Text className="wallet-field-hint">{`\u5f53\u524d\u53ef\u63d0\u73b0\uff1a\u00a5${fenToYuan(availableFen)}`}</Text>
             </View>
 
             <View className="button-primary" onClick={loading ? undefined : applyWithdraw}>

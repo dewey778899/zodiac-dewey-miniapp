@@ -17,28 +17,19 @@
 }
 
 .chapter-index {
-  width: 56rpx;
-  height: 56rpx;
-  border-radius: 18rpx;
-  background: rgba(89, 213, 255, 0.1);
-  color: #59d5ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22rpx;
-  font-weight: 700;
+  display: none;
 }
 
 .chapter-title {
   flex: 1;
   font-size: 30rpx;
   font-weight: 700;
-  color: #edf6ff;
+  color: #352733;
 }
 
 .chapter-content {
   font-size: 26rpx;
   line-height: 1.9;
-  color: #c9dbef;
+  color: #4a3944;
   white-space: pre-wrap;
 }

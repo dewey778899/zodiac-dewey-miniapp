@@ -4,9 +4,9 @@ export const API_BASE = "https://zodiac.xiaodengge.top";
 export const WEB_SHARE_BASE = "https://zodiac.xiaodengge.top";
 
 export const REPORT_THEMES: Array<{ key: ThemeType; label: string; subtitle: string; icon: string }> = [
-  { key: "love", label: "关系", subtitle: "双人互动内容", icon: "缘" },
-  { key: "career", label: "职业", subtitle: "个人职业状态内容", icon: "业" },
-  { key: "wealth", label: "生活", subtitle: "个人生活节奏内容", icon: "生" }
+  { key: "love", label: "关系洞察", subtitle: "双人互动", icon: "01" },
+  { key: "career", label: "职业状态", subtitle: "工作节奏", icon: "02" },
+  { key: "wealth", label: "生活节奏", subtitle: "资源安排", icon: "03" }
 ];
 
 export const MODEL_COPY: Record<ModelType, { label: string; badge: string }> = {

@@ -1,8 +1,9 @@
 import { Button, Text, View } from "@tarojs/components";
 import Taro, { useDidShow, useRouter } from "@tarojs/taro";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { fetchOrder, prepareWechatJsapi } from "../../api/compatibility";
 import { useReportStore } from "../../store/useReportStore";
+import type { ThemeType } from "../../types/report";
 import { ensureDeviceToken, getSessionOpenid, setSessionOpenid } from "../../utils/auth";
 import "./index.scss";
 
@@ -16,9 +17,11 @@ type JsapiPayload = {
 };
 
 export default function PaymentPage() {
+  const hasReturnedRef = useRef(false);
   const router = useRouter();
   const activeTheme = useReportStore((state) => state.activeTheme);
   const referralProfile = useReportStore((state) => state.referralProfile);
+  const setActiveTheme = useReportStore((state) => state.setActiveTheme);
   const setAccessToken = useReportStore((state) => state.setAccessToken);
   const setThemeModel = useReportStore((state) => state.setThemeModel);
 
@@ -30,6 +33,20 @@ export default function PaymentPage() {
   const [lastOrderNo, setLastOrderNo] = useState(pendingOrderNo);
 
   const phone = useMemo(() => referralProfile?.phone || "", [referralProfile]);
+
+  function returnToPremiumForm() {
+    if (hasReturnedRef.current) return;
+    hasReturnedRef.current = true;
+
+    setTimeout(() => {
+      const pages = Taro.getCurrentPages();
+      if (pages.length > 1) {
+        Taro.navigateBack({ delta: 1 });
+      } else {
+        Taro.redirectTo({ url: "/pages/home/index" });
+      }
+    }, 450);
+  }
 
   useDidShow(() => {
     if (pendingOrderNo) {
@@ -116,9 +133,12 @@ export default function PaymentPage() {
     try {
       const latest = await fetchOrder(orderNo);
       if (latest.accessToken && latest.paid) {
-        setAccessToken(theme as "love" | "career" | "wealth", latest.accessToken);
-        setThemeModel(theme as "love" | "career" | "wealth", "claude");
+        const reportTheme = theme as ThemeType;
+        setActiveTheme(reportTheme);
+        setAccessToken(reportTheme, latest.accessToken);
+        setThemeModel(reportTheme, "claude");
         setStatusText("支付成功，扩展内容已开通。");
+        returnToPremiumForm();
         return;
       }
 

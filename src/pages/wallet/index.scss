@@ -17,15 +17,51 @@
   color: #6b4f60;
 }
 
-.wallet-input {
-  min-height: 88rpx;
-  padding: 0 24rpx;
+.wallet-input-wrap {
+  min-height: 96rpx;
+  padding: 0 18rpx 0 22rpx;
   border-radius: 24rpx;
-  background: rgba(255, 255, 255, 0.74);
-  border: 1.5rpx solid rgba(255, 181, 167, 0.26);
+  background: rgba(255, 255, 255, 0.92);
+  border: 2rpx solid rgba(255, 139, 122, 0.44);
+  box-shadow: 0 10rpx 24rpx rgba(155, 127, 199, 0.12);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.wallet-input-prefix {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #c47a7a;
+}
+
+.wallet-input {
+  flex: 1;
+  min-height: 88rpx;
+  padding: 0;
+  background: transparent;
+  border: 0;
   box-sizing: border-box;
   color: #3d2a35;
-  font-size: 28rpx;
+  font-size: 36rpx;
+  font-weight: 800;
+}
+
+.wallet-input-edit {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 181, 167, 0.18);
+  color: #8c5c6d;
+  font-size: 22rpx;
+  white-space: nowrap;
+}
+
+.wallet-field-hint {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 23rpx;
+  color: #8c6d7b;
 }
 
 .wallet-actions {
@@ -33,6 +69,16 @@
   display: flex;
   flex-direction: column;
   gap: 16rpx;
+}
+
+.wallet-share-button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.wallet-share-button::after {
+  border: 0;
 }
 
 .wallet-summary {
@@ -48,6 +94,11 @@
   margin-top: 8rpx;
   font-size: 24rpx;
   color: #4e3a47;
+}
+
+.wallet-line-strong {
+  font-weight: 800;
+  color: #c05e75;
 }
 
 .wallet-section {

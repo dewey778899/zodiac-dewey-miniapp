@@ -55,6 +55,12 @@ export default function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (themeAccessToken) {
+      setShowPremiumModal(false);
+    }
+  }, [themeAccessToken]);
+
   const clearError = () => setError("");
 
   const updateProgressLabel = (value: number) => {
@@ -193,14 +199,8 @@ export default function HomePage() {
         />
       </View>
 
-      <View className="home-actions home-actions-inline">
-        <View className="button-secondary" onClick={() => Taro.navigateTo({ url: "/pages/wallet/index" })}>
-          {"\u8fd4\u73b0\u8d26\u6237"}
-        </View>
-      </View>
-
       <View className="home-tip">
-        {"\u597d\u53cb\u901a\u8fc7\u4f60\u7684\u5206\u4eab\u8fdb\u5165\u5e76\u5b8c\u6210\u6269\u5c55\u5185\u5bb9\u4ed8\u8d39\u540e\uff0c\u8fd4\u73b0\u4f1a\u81ea\u52a8\u8fdb\u5165\u4f60\u7684\u7edf\u4e00\u8d26\u6237\u3002"}
+        {"好友通过你的分享进入并完成扩展内容付费后，奖励会自动进入你的统一账户。"}
       </View>
 
       <PersonForm title="我的信息" value={personA} onChange={(patch) => updateCurrentPerson("a", patch)} />
@@ -226,6 +226,10 @@ export default function HomePage() {
         <View className="button-primary" onClick={submitting ? undefined : handleSubmit}>
           {renderActionLabel()}
         </View>
+      </View>
+
+      <View className="home-footer-link" onClick={() => Taro.navigateTo({ url: "/pages/wallet/index" })}>
+        {"账户中心"}
       </View>
 
       {showPremiumModal ? (

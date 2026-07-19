@@ -82,15 +82,18 @@
   gap: 16rpx;
 }
 
-.home-actions-inline {
-  margin-top: 16rpx;
-  flex-direction: row;
-}
-
 .home-tip {
   margin-top: 18rpx;
   font-size: 22rpx;
   line-height: 1.7;
+  color: #7e6574;
+}
+
+.home-footer-link {
+  margin-top: 18rpx;
+  padding: 10rpx 0;
+  text-align: center;
+  font-size: 24rpx;
   color: #7e6574;
 }
 

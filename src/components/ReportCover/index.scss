@@ -1,14 +1,15 @@
 .report-cover {
   padding: 34rpx 28rpx;
   background:
-    radial-gradient(circle at top right, rgba(89, 213, 255, 0.12), transparent 32%),
-    linear-gradient(180deg, rgba(10, 21, 38, 0.9), rgba(7, 17, 29, 0.92));
+    radial-gradient(circle at top right, rgba(255, 181, 167, 0.16), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(200, 182, 226, 0.12), transparent 36%),
+    linear-gradient(180deg, rgba(255, 250, 248, 0.98), rgba(248, 240, 246, 0.96));
 }
 
 .report-cover-kicker {
   font-size: 20rpx;
   letter-spacing: 4rpx;
-  color: #59d5ff;
+  color: #c47a7a;
 }
 
 .report-cover-title {
@@ -16,7 +17,7 @@
   margin-top: 16rpx;
   font-size: 42rpx;
   font-weight: 800;
-  color: #edf6ff;
+  color: #352733;
 }
 
 .report-cover-score-row {
@@ -31,12 +32,12 @@
   font-family: SimSun, STSong, "Noto Serif SC", serif;
   font-size: 110rpx;
   line-height: 1;
-  color: #edf6ff;
+  color: #2f2630;
 }
 
 .report-cover-score-unit {
   font-size: 28rpx;
-  color: #88a6c7;
+  color: #8b6e7d;
   padding-bottom: 16rpx;
 }
 
@@ -49,14 +50,14 @@
 .report-cover-type {
   margin-top: 10rpx;
   font-size: 28rpx;
-  color: #cfe3f9;
+  color: #4d3a49;
 }
 
 .report-cover-tagline {
   margin-top: 10rpx;
   font-size: 24rpx;
   line-height: 1.7;
-  color: #8ea7c6;
+  color: #7a6070;
 }
 
 .report-cover-people {
@@ -81,31 +82,31 @@
 
 .report-cover-symbol {
   font-size: 56rpx;
-  color: #59d5ff;
+  color: #cc7d8f;
 }
 
 .report-cover-zodiac {
   margin-top: 10rpx;
   font-size: 22rpx;
-  color: #8ea7c6;
+  color: #8b6e7d;
 }
 
 .report-cover-name {
   margin-top: 8rpx;
   font-size: 30rpx;
   font-weight: 700;
-  color: #edf6ff;
+  color: #342832;
 }
 
 .report-cover-heart {
   font-size: 36rpx;
-  color: #8db7ff;
+  color: #c47a7a;
 }
 
 .report-cover-meta {
   margin-top: 28rpx;
   padding-top: 18rpx;
-  border-top: 1rpx solid rgba(89, 213, 255, 0.12);
+  border-top: 1rpx solid rgba(197, 127, 147, 0.16);
   display: flex;
   flex-direction: column;
   gap: 8rpx;
@@ -115,15 +116,15 @@
 .report-cover-meta-label {
   font-size: 20rpx;
   letter-spacing: 3rpx;
-  color: #88a6c7;
+  color: #9a7b89;
 }
 
 .report-cover-meta-value {
   font-size: 24rpx;
-  color: #edf6ff;
+  color: #352733;
 }
 
 .report-cover-meta-date {
   font-size: 22rpx;
-  color: #8ea7c6;
+  color: #8b6e7d;
 }
